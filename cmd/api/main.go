@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
+	"github.com/crossevol/goadmin/internal/database/mysqlDao"
 	"log/slog"
 	"os"
 	"runtime/debug"
@@ -58,10 +60,12 @@ type config struct {
 
 type application struct {
 	config config
+	ctx    *context.Context
 	db     *database.DB
 	logger *slog.Logger
 	mailer *smtp.Mailer
 	wg     sync.WaitGroup
+	q      *mysqlDao.Queries
 }
 
 func run(logger *slog.Logger) error {
@@ -101,11 +105,14 @@ func run(logger *slog.Logger) error {
 		return err
 	}
 
+	ctx := context.Background()
 	app := &application{
 		config: cfg,
 		db:     db,
 		logger: logger,
 		mailer: mailer,
+		ctx:    &ctx,
+		q:      mysqlDao.New(db),
 	}
 
 	return app.serveHTTP()

@@ -32,5 +32,7 @@ func (app *application) routes() http.Handler {
 		mux.Get("/basic-auth-protected", app.protected)
 	})
 
+	mux.Post("/auth/login", app.login)
+
 	return mux
 }

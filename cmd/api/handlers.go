@@ -154,24 +154,22 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		app.badRequest(w, r, err)
 		return
 	}
+	input.Validator.CheckField(input.Email != "", "Email", "Email is required")
+	input.Validator.CheckField(input.Password != "", "Password", "Password is required")
 
-	user, found, err := app.db.GetUserByEmail(input.Email)
+	user, err := app.q.GetGoadminUserByEmail(*app.ctx, input.Email)
 	if err != nil {
 		app.serverError(w, r, err)
 		return
 	}
 
-	input.Validator.CheckField(input.Email != "", "Email", "Email is required")
-	input.Validator.CheckField(found, "Email", "Email address could not be found")
-
-	if found {
-		passwordMatches, err := password.Matches(input.Password, user.HashedPassword)
+	if user.ID > 0 {
+		passwordMatches, err := password.Matches(input.Password, user.Password)
 		if err != nil {
 			app.serverError(w, r, err)
 			return
 		}
 
-		input.Validator.CheckField(input.Password != "", "Password", "Password is required")
 		input.Validator.CheckField(passwordMatches, "Password", "Password is incorrect")
 	}
 
@@ -181,7 +179,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var claims jwt.Claims
-	claims.Subject = strconv.Itoa(user.ID)
+	claims.Subject = strconv.Itoa(int(user.ID))
 
 	expiry := time.Now().Add(24 * time.Hour)
 	claims.Issued = jwt.NewNumericTime(time.Now())
