@@ -1,3 +1,8 @@
+GET {{url}}/auth/me
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjQ0NDQiLCJzdWIiOiIxIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NDQ0NCJdLCJleHAiOjE3MTcyNDQxMjkuODU0NjQ3NCwibmJmIjoxNzE3MTU3NzI5Ljg1NDY0NzQsImlhdCI6MTcxNzE1NzcyOS44NTQ2NDc0fQ.GYt-QJNcx-eHIURyU7cHEJRc6ksPCXWSXM-XXDbkjGs
+
+###
 POST {{url}}/auth/login
 Content-Type: application/json
 
@@ -7,3 +12,5 @@ Content-Type: application/json
 }
 
 ###
+
+

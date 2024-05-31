@@ -210,6 +210,15 @@ func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("This is a protected handler"))
 }
 
-func (app *application) getIdentity(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("This is a protected handler"))
+func (app *application) me(w http.ResponseWriter, r *http.Request) {
+	authenticatedUser := contextGetAuthenticatedUser(r)
+	if authenticatedUser == nil {
+		app.authenticationRequired(w, r)
+		return
+	}
+
+	err := response.JSON(w, http.StatusOK, authenticatedUser)
+	if err != nil {
+		app.serverError(w, r, err)
+	}
 }

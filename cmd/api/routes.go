@@ -23,6 +23,8 @@ func (app *application) routes() http.Handler {
 	mux.Group(func(mux chi.Router) {
 		mux.Use(app.requireAuthenticatedUser)
 
+		mux.Get("/auth/me", app.me)
+
 		mux.Get("/protected", app.protected)
 	})
 

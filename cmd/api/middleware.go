@@ -88,14 +88,14 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 					return
 				}
 
-				user, found, err := app.db.GetUser(userID)
+				goadminUser, err := app.q.GetGoadminUser(*app.ctx, uint32(userID))
 				if err != nil {
 					app.serverError(w, r, err)
 					return
 				}
 
-				if found {
-					r = contextSetAuthenticatedUser(r, user)
+				if goadminUser.ID > 0 {
+					r = contextSetAuthenticatedUser(r, &goadminUser)
 				}
 			}
 		}
