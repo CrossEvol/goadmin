@@ -3,7 +3,7 @@
 //   sqlc v1.25.0
 // source: goadmin_permissions.sql
 
-package dao
+package mysqlDao
 
 import (
 	"context"

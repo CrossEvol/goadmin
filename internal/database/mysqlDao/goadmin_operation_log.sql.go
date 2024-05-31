@@ -3,7 +3,7 @@
 //   sqlc v1.25.0
 // source: goadmin_operation_log.sql
 
-package dao
+package mysqlDao
 
 import (
 	"context"

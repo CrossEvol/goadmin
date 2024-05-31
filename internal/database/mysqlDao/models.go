@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.25.0
 
-package dao
+package mysqlDao
 
 import (
 	"database/sql"

@@ -3,7 +3,7 @@
 //   sqlc v1.25.0
 // source: goadmin_role_users.sql
 
-package dao
+package mysqlDao
 
 import (
 	"context"
