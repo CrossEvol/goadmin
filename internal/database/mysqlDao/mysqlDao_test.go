@@ -1,12 +1,14 @@
 package mysqlDao
 
 import (
+	"context"
 	"fmt"
 	"github.com/crossevol/goadmin/assets"
 	"github.com/crossevol/goadmin/internal/database"
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"io/fs"
 	"os"
@@ -65,9 +67,30 @@ func (suite *MySQLDaoTestSuite) TearDownTest() {
 
 func (suite *MySQLDaoTestSuite) TestMySQLDao() {
 	assert.Equal(suite.T(), 5, suite.VariableThatShouldStartAtFive)
-	fmt.Println(suite.dbDsn)
-	fmt.Println(suite.dbName)
-	fmt.Println(suite.dbUrl)
+	ctx := context.Background()
+
+	_, err := suite.queries.GetGoadminMenus(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetGoadminOperationLogs(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetGoadminPermissions(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetGoadminRoleMenus(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetGoadminRolePermissions(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetGoadminRoleUsers(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetGoadminRoles(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetGoadminSessions(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetGoadminSites(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.CountGoadminUserPermissions(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetGoadminUsers(ctx)
+	require.Nil(suite.T(), err)
 }
 
 func TestMySQLDaoTestSuite(t *testing.T) {
