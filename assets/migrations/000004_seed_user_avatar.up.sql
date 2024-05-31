@@ -1,0 +1,1 @@
+UPDATE goadmin_users SET avatar = 'https://i.pravatar.cc/300' ;
