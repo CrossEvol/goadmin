@@ -22,6 +22,4 @@ DROP TABLE IF EXISTS `goadmin_user_permissions`;
 
 DROP TABLE IF EXISTS `goadmin_users`;
 
-DROP TABLE IF EXISTS `users`;
-
 SET FOREIGN_KEY_CHECKS = 1;

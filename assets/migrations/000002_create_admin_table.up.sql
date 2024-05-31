@@ -166,16 +166,5 @@ CREATE TABLE `goadmin_users`  (
                                   UNIQUE INDEX `admin_users_username_unique`(`username`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
--- ----------------------------
--- Table structure for users
--- ----------------------------
-CREATE TABLE `users`  (
-                          `id` int NOT NULL AUTO_INCREMENT,
-                          `created` datetime NOT NULL,
-                          `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                          `hashed_password` char(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                          PRIMARY KEY (`id`) USING BTREE,
-                          UNIQUE INDEX `email`(`email`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
