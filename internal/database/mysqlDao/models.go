@@ -100,6 +100,7 @@ type GoadminUser struct {
 	RememberToken sql.NullString `db:"remember_token" json:"remember_token"`
 	CreatedAt     sql.NullTime   `db:"created_at" json:"created_at"`
 	UpdatedAt     sql.NullTime   `db:"updated_at" json:"updated_at"`
+	Email         string         `db:"email" json:"email"`
 }
 
 type GoadminUserPermission struct {

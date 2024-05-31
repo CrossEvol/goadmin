@@ -23,9 +23,9 @@ func (q *Queries) CountGoadminUsers(ctx context.Context) (int64, error) {
 
 const CreateGoadminUser = `-- name: CreateGoadminUser :execresult
 INSERT INTO ` + "`" + `goadmin_users` + "`" + ` (
-` + "`" + `username` + "`" + `,` + "`" + `password` + "`" + `,` + "`" + `name` + "`" + `,` + "`" + `avatar` + "`" + `,` + "`" + `remember_token` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `updated_at` + "`" + `
+` + "`" + `username` + "`" + `,` + "`" + `password` + "`" + `,` + "`" + `name` + "`" + `,` + "`" + `avatar` + "`" + `,` + "`" + `remember_token` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `updated_at` + "`" + `,` + "`" + `email` + "`" + `
 ) VALUES (
-? ,? ,? ,? ,? ,? ,? 
+? ,? ,? ,? ,? ,? ,? ,? 
 )
 `
 
@@ -37,6 +37,7 @@ type CreateGoadminUserParams struct {
 	RememberToken sql.NullString `db:"remember_token" json:"remember_token"`
 	CreatedAt     sql.NullTime   `db:"created_at" json:"created_at"`
 	UpdatedAt     sql.NullTime   `db:"updated_at" json:"updated_at"`
+	Email         string         `db:"email" json:"email"`
 }
 
 func (q *Queries) CreateGoadminUser(ctx context.Context, arg CreateGoadminUserParams) (sql.Result, error) {
@@ -48,6 +49,7 @@ func (q *Queries) CreateGoadminUser(ctx context.Context, arg CreateGoadminUserPa
 		arg.RememberToken,
 		arg.CreatedAt,
 		arg.UpdatedAt,
+		arg.Email,
 	)
 }
 
@@ -62,7 +64,7 @@ func (q *Queries) DeleteGoadminUser(ctx context.Context, id uint32) error {
 }
 
 const GetGoadminUser = `-- name: GetGoadminUser :one
-SELECT id, username, password, name, avatar, remember_token, created_at, updated_at FROM ` + "`" + `goadmin_users` + "`" + `
+SELECT id, username, password, name, avatar, remember_token, created_at, updated_at, email FROM ` + "`" + `goadmin_users` + "`" + `
 WHERE id = ? LIMIT 1
 `
 
@@ -78,12 +80,35 @@ func (q *Queries) GetGoadminUser(ctx context.Context, id uint32) (GoadminUser, e
 		&i.RememberToken,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+		&i.Email,
+	)
+	return i, err
+}
+
+const GetGoadminUserByEmail = `-- name: GetGoadminUserByEmail :one
+SELECT id, username, password, name, avatar, remember_token, created_at, updated_at, email FROM ` + "`" + `goadmin_users` + "`" + `
+WHERE ` + "`" + `email` + "`" + ` = ? LIMIT 1
+`
+
+func (q *Queries) GetGoadminUserByEmail(ctx context.Context, email string) (GoadminUser, error) {
+	row := q.queryRow(ctx, q.getGoadminUserByEmailStmt, GetGoadminUserByEmail, email)
+	var i GoadminUser
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Password,
+		&i.Name,
+		&i.Avatar,
+		&i.RememberToken,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Email,
 	)
 	return i, err
 }
 
 const GetGoadminUsers = `-- name: GetGoadminUsers :many
-SELECT id, username, password, name, avatar, remember_token, created_at, updated_at FROM ` + "`" + `goadmin_users` + "`" + `
+SELECT id, username, password, name, avatar, remember_token, created_at, updated_at, email FROM ` + "`" + `goadmin_users` + "`" + `
 `
 
 func (q *Queries) GetGoadminUsers(ctx context.Context) ([]GoadminUser, error) {
@@ -104,6 +129,7 @@ func (q *Queries) GetGoadminUsers(ctx context.Context) ([]GoadminUser, error) {
 			&i.RememberToken,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.Email,
 		); err != nil {
 			return nil, err
 		}
@@ -128,7 +154,8 @@ SET
   ` + "`" + `avatar` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `avatar` + "`" + ` END,
   ` + "`" + `remember_token` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `remember_token` + "`" + ` END,
   ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
-  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
+  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END,
+  ` + "`" + `email` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `email` + "`" + ` END
 WHERE id = ?
 `
 
@@ -140,6 +167,7 @@ type UpdateGoadminUserParams struct {
 	RememberToken sql.NullString `db:"remember_token" json:"remember_token"`
 	CreatedAt     sql.NullTime   `db:"created_at" json:"created_at"`
 	UpdatedAt     sql.NullTime   `db:"updated_at" json:"updated_at"`
+	Email         string         `db:"email" json:"email"`
 	ID            uint32         `db:"id" json:"id"`
 }
 
@@ -159,6 +187,8 @@ func (q *Queries) UpdateGoadminUser(ctx context.Context, arg UpdateGoadminUserPa
 		arg.CreatedAt,
 		arg.UpdatedAt,
 		arg.UpdatedAt,
+		arg.Email,
+		arg.Email,
 		arg.ID,
 	)
 	return err

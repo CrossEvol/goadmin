@@ -6,7 +6,7 @@
   },
   "packages": [
     {
-      "name": "dao",
+      "name": "mysqlDao",
       "schema": "assets/migrations",
       "queries": "assets/queries",
       "path": "internal/database/mysqlDao",

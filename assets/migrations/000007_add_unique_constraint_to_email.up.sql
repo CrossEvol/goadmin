@@ -1,0 +1,1 @@
+ALTER TABLE `goadmin_users` ADD CONSTRAINT unique_email UNIQUE(`email`) ;
