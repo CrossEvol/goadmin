@@ -2,6 +2,8 @@
 # HELPERS
 # ==================================================================================== #
 
+DB_DSN := rootomf:7LImSxF1HZ5oBS0WnE@tcp(localhost:3306)/goadmin?parseTime=true
+
 ## help: print this help message
 .PHONY: help
 help:
@@ -92,6 +94,12 @@ migrations/goto:
 .PHONY: migrations/force
 migrations/force:
 	go run -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="mysql://${DB_DSN}" force ${version}
+
+## migrations/drop : Drop everything inside database
+.PHONY: migrations/drop
+migrations/drop:
+	go run -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="mysql://${DB_DSN}" drop
+
 
 ## migrations/version: print the current in-use migration version
 .PHONY: migrations/version
