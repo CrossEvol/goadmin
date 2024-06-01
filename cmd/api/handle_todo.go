@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/crossevol/goadmin/internal/models/dto"
+	"github.com/crossevol/goadmin/internal/models/vo"
 	"github.com/crossevol/goadmin/internal/request"
 	"github.com/crossevol/goadmin/internal/response"
 	"github.com/crossevol/goadmin/internal/utils"
@@ -22,7 +23,7 @@ func (app *application) GetTodo(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w, r)
 		return
 	}
-	response.JSON(w, http.StatusOK, todo)
+	response.JSON(w, http.StatusOK, vo.NewTodoVo(&todo))
 }
 
 func (app *application) GetTodoList(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +39,7 @@ func (app *application) GetTodoList(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
-	response.JSON(w, http.StatusOK, todos)
+	response.JSON(w, http.StatusOK, vo.NewTodoVoList(todos))
 }
 
 func (app *application) GetTodoByIDs(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +60,7 @@ func (app *application) GetTodoByIDs(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
-	response.JSON(w, http.StatusOK, todosByIDs)
+	response.JSON(w, http.StatusOK, vo.NewTodoVoList(todosByIDs))
 }
 
 func (app *application) CreateTodo(w http.ResponseWriter, r *http.Request) {
@@ -85,7 +86,7 @@ func (app *application) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
-	response.JSON(w, http.StatusOK, todo)
+	response.JSON(w, http.StatusOK, vo.NewTodoVo(&todo))
 }
 
 func (app *application) UpdateTodo(w http.ResponseWriter, r *http.Request) {
@@ -113,7 +114,7 @@ func (app *application) UpdateTodo(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
-	response.JSON(w, http.StatusOK, todo)
+	response.JSON(w, http.StatusOK, vo.NewTodoVo(&todo))
 }
 
 func (app *application) DeleteTodo(w http.ResponseWriter, r *http.Request) {
@@ -133,5 +134,5 @@ func (app *application) DeleteTodo(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
-	response.JSON(w, http.StatusOK, todo)
+	response.JSON(w, http.StatusOK, vo.NewTodoVo(&todo))
 }
