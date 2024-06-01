@@ -144,7 +144,7 @@ func (q *Queries) GetTodoTagsByIDs(ctx context.Context, ids []int) ([]TodoTag, e
 	return items, nil
 }
 
-const UpdateTodoTag = `-- name: UpdateTodoTag :exec
+const UpdateTodoTag = `-- name: UpdateTodoTag :execresult
 UPDATE ` + "`" + `todo_tag` + "`" + `
 SET 
   ` + "`" + `createdAt` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `createdAt` + "`" + ` END,
@@ -161,8 +161,8 @@ type UpdateTodoTagParams struct {
 	ID        int       `db:"id" json:"id"`
 }
 
-func (q *Queries) UpdateTodoTag(ctx context.Context, arg UpdateTodoTagParams) error {
-	_, err := q.exec(ctx, q.updateTodoTagStmt, UpdateTodoTag,
+func (q *Queries) UpdateTodoTag(ctx context.Context, arg UpdateTodoTagParams) (sql.Result, error) {
+	return q.exec(ctx, q.updateTodoTagStmt, UpdateTodoTag,
 		arg.CreatedAt,
 		arg.CreatedAt,
 		arg.Name,
@@ -171,5 +171,4 @@ func (q *Queries) UpdateTodoTag(ctx context.Context, arg UpdateTodoTagParams) er
 		arg.TodoID,
 		arg.ID,
 	)
-	return err
 }

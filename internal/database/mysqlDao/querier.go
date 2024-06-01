@@ -102,7 +102,7 @@ type Querier interface {
 	GetTodosByIDs(ctx context.Context, ids []int) ([]Todo, error)
 	GetTodosongroup(ctx context.Context, arg GetTodosongroupParams) (Todosongroup, error)
 	GetTodosongroups(ctx context.Context) ([]Todosongroup, error)
-	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) error
+	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (sql.Result, error)
 	UpdateGoadminMenu(ctx context.Context, arg UpdateGoadminMenuParams) error
 	UpdateGoadminOperationLog(ctx context.Context, arg UpdateGoadminOperationLogParams) error
 	UpdateGoadminPermission(ctx context.Context, arg UpdateGoadminPermissionParams) error
@@ -114,11 +114,11 @@ type Querier interface {
 	UpdateGoadminSite(ctx context.Context, arg UpdateGoadminSiteParams) error
 	UpdateGoadminUser(ctx context.Context, arg UpdateGoadminUserParams) error
 	UpdateGoadminUserPermission(ctx context.Context, arg UpdateGoadminUserPermissionParams) error
-	UpdateGroup(ctx context.Context, arg UpdateGroupParams) error
-	UpdateTodo(ctx context.Context, arg UpdateTodoParams) error
-	UpdateTodoDetail(ctx context.Context, arg UpdateTodoDetailParams) error
-	UpdateTodoTag(ctx context.Context, arg UpdateTodoTagParams) error
-	UpdateTodosongroup(ctx context.Context, arg UpdateTodosongroupParams) error
+	UpdateGroup(ctx context.Context, arg UpdateGroupParams) (sql.Result, error)
+	UpdateTodo(ctx context.Context, arg UpdateTodoParams) (sql.Result, error)
+	UpdateTodoDetail(ctx context.Context, arg UpdateTodoDetailParams) (sql.Result, error)
+	UpdateTodoTag(ctx context.Context, arg UpdateTodoTagParams) (sql.Result, error)
+	UpdateTodosongroup(ctx context.Context, arg UpdateTodosongroupParams) (sql.Result, error)
 }
 
 var _ Querier = (*Queries)(nil)

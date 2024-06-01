@@ -128,7 +128,7 @@ func (q *Queries) GetGroupsByIDs(ctx context.Context, ids []int) ([]Group, error
 	return items, nil
 }
 
-const UpdateGroup = `-- name: UpdateGroup :exec
+const UpdateGroup = `-- name: UpdateGroup :execresult
 UPDATE ` + "`" + `group` + "`" + `
 SET ` + "`" + `desc` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `desc` + "`" + ` END,
     ` + "`" + `name` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `name` + "`" + ` END
@@ -141,13 +141,12 @@ type UpdateGroupParams struct {
 	ID   int    `db:"id" json:"id"`
 }
 
-func (q *Queries) UpdateGroup(ctx context.Context, arg UpdateGroupParams) error {
-	_, err := q.exec(ctx, q.updateGroupStmt, UpdateGroup,
+func (q *Queries) UpdateGroup(ctx context.Context, arg UpdateGroupParams) (sql.Result, error) {
+	return q.exec(ctx, q.updateGroupStmt, UpdateGroup,
 		arg.Desc,
 		arg.Desc,
 		arg.Name,
 		arg.Name,
 		arg.ID,
 	)
-	return err
 }

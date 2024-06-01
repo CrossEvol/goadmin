@@ -101,7 +101,7 @@ func (q *Queries) GetTodosongroups(ctx context.Context) ([]Todosongroup, error) 
 	return items, nil
 }
 
-const UpdateTodosongroup = `-- name: UpdateTodosongroup :exec
+const UpdateTodosongroup = `-- name: UpdateTodosongroup :execresult
 UPDATE ` + "`" + `todosongroups` + "`" + `
 SET ` + "`" + `todo_id` + "`" + `  = CASE
                      WHEN ? IS NOT NULL THEN ?
@@ -119,13 +119,12 @@ type UpdateTodosongroupParams struct {
 	Assignedat time.Time `db:"assignedat" json:"assignedat"`
 }
 
-func (q *Queries) UpdateTodosongroup(ctx context.Context, arg UpdateTodosongroupParams) error {
-	_, err := q.exec(ctx, q.updateTodosongroupStmt, UpdateTodosongroup,
+func (q *Queries) UpdateTodosongroup(ctx context.Context, arg UpdateTodosongroupParams) (sql.Result, error) {
+	return q.exec(ctx, q.updateTodosongroupStmt, UpdateTodosongroup,
 		arg.TodoID,
 		arg.TodoID,
 		arg.GroupID,
 		arg.GroupID,
 		arg.Assignedat,
 	)
-	return err
 }

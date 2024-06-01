@@ -20,7 +20,7 @@ FROM `category`;
 INSERT INTO `category` (`name`, `parent_id`)
 VALUES (?, ?);
 
--- name: UpdateCategory :exec
+-- name: UpdateCategory :execresult
 UPDATE `category`
 SET `name`      = CASE WHEN sqlc.arg('name') IS NOT NULL THEN sqlc.arg('name') ELSE `name` END,
     `parent_id` = CASE WHEN sqlc.arg('parent_id') IS NOT NULL THEN sqlc.arg('parent_id') ELSE `parent_id` END

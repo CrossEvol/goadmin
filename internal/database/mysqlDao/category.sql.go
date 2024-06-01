@@ -128,7 +128,7 @@ func (q *Queries) GetCategory(ctx context.Context, id int) (Category, error) {
 	return i, err
 }
 
-const UpdateCategory = `-- name: UpdateCategory :exec
+const UpdateCategory = `-- name: UpdateCategory :execresult
 UPDATE ` + "`" + `category` + "`" + `
 SET ` + "`" + `name` + "`" + `      = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `name` + "`" + ` END,
     ` + "`" + `parent_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `parent_id` + "`" + ` END
@@ -141,13 +141,12 @@ type UpdateCategoryParams struct {
 	ID       int           `db:"id" json:"id"`
 }
 
-func (q *Queries) UpdateCategory(ctx context.Context, arg UpdateCategoryParams) error {
-	_, err := q.exec(ctx, q.updateCategoryStmt, UpdateCategory,
+func (q *Queries) UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (sql.Result, error) {
+	return q.exec(ctx, q.updateCategoryStmt, UpdateCategory,
 		arg.Name,
 		arg.Name,
 		arg.ParentID,
 		arg.ParentID,
 		arg.ID,
 	)
-	return err
 }

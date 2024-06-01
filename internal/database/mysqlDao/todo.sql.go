@@ -183,7 +183,7 @@ func (q *Queries) GetTodosByIDs(ctx context.Context, ids []int) ([]Todo, error) 
 	return items, nil
 }
 
-const UpdateTodo = `-- name: UpdateTodo :exec
+const UpdateTodo = `-- name: UpdateTodo :execresult
 UPDATE ` + "`" + `todo` + "`" + `
 SET 
   ` + "`" + `amount` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `amount` + "`" + ` END,
@@ -214,8 +214,8 @@ type UpdateTodoParams struct {
 	ID         int           `db:"id" json:"id"`
 }
 
-func (q *Queries) UpdateTodo(ctx context.Context, arg UpdateTodoParams) error {
-	_, err := q.exec(ctx, q.updateTodoStmt, UpdateTodo,
+func (q *Queries) UpdateTodo(ctx context.Context, arg UpdateTodoParams) (sql.Result, error) {
+	return q.exec(ctx, q.updateTodoStmt, UpdateTodo,
 		arg.Amount,
 		arg.Amount,
 		arg.CategoryID,
@@ -238,5 +238,4 @@ func (q *Queries) UpdateTodo(ctx context.Context, arg UpdateTodoParams) error {
 		arg.UpdatedAt,
 		arg.ID,
 	)
-	return err
 }

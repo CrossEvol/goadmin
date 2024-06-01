@@ -16,7 +16,7 @@ FROM `todosongroups`;
 INSERT INTO `todosongroups` (`todo_id`, `group_id`)
 VALUES (?, ?);
 
--- name: UpdateTodosongroup :exec
+-- name: UpdateTodosongroup :execresult
 UPDATE `todosongroups`
 SET `todo_id`  = CASE
                      WHEN sqlc.arg('todo_id') IS NOT NULL THEN sqlc.arg('todo_id')

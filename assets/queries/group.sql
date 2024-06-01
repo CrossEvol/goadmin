@@ -20,7 +20,7 @@ FROM `group`;
 INSERT INTO `group` (`desc`, `name`)
 VALUES (?, ?);
 
--- name: UpdateGroup :exec
+-- name: UpdateGroup :execresult
 UPDATE `group`
 SET `desc` = CASE WHEN sqlc.arg('desc') IS NOT NULL THEN sqlc.arg('desc') ELSE `desc` END,
     `name` = CASE WHEN sqlc.arg('name') IS NOT NULL THEN sqlc.arg('name') ELSE `name` END

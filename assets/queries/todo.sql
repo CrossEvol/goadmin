@@ -21,7 +21,7 @@ INSERT INTO `todo` (
 ? ,? ,? ,? ,? ,? ,? ,? ,? ,? 
 );
 
--- name: UpdateTodo :exec
+-- name: UpdateTodo :execresult
 UPDATE `todo`
 SET 
   `amount` = CASE WHEN sqlc.arg('amount') IS NOT NULL THEN sqlc.arg('amount') ELSE `amount` END,

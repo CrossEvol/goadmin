@@ -20,7 +20,7 @@ FROM `todo_detail`;
 INSERT INTO `todo_detail` (`desc`, `img_url`, `todo_id`)
 VALUES (?, ?, ?);
 
--- name: UpdateTodoDetail :exec
+-- name: UpdateTodoDetail :execresult
 UPDATE `todo_detail`
 SET `desc`    = CASE WHEN sqlc.arg('desc') IS NOT NULL THEN sqlc.arg('desc') ELSE `desc` END,
 
