@@ -8,6 +8,7 @@ package mysqlDao
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const CountGoadminRoleUsers = `-- name: CountGoadminRoleUsers :one
@@ -23,39 +24,39 @@ func (q *Queries) CountGoadminRoleUsers(ctx context.Context) (int64, error) {
 
 const CreateGoadminRoleUser = `-- name: CreateGoadminRoleUser :execresult
 INSERT INTO ` + "`" + `goadmin_role_users` + "`" + ` (
-` + "`" + `user_id` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `updated_at` + "`" + `
+` + "`" + `role_id` + "`" + `,` + "`" + `updated_at` + "`" + `,` + "`" + `user_id` + "`" + `
 ) VALUES (
 ? ,? ,? 
 )
 `
 
 type CreateGoadminRoleUserParams struct {
-	UserID    uint32       `db:"user_id" json:"user_id"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
+	RoleID    uint32    `db:"role_id" json:"role_id"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
+	UserID    uint32    `db:"user_id" json:"user_id"`
 }
 
 func (q *Queries) CreateGoadminRoleUser(ctx context.Context, arg CreateGoadminRoleUserParams) (sql.Result, error) {
-	return q.exec(ctx, q.createGoadminRoleUserStmt, CreateGoadminRoleUser, arg.UserID, arg.CreatedAt, arg.UpdatedAt)
+	return q.exec(ctx, q.createGoadminRoleUserStmt, CreateGoadminRoleUser, arg.RoleID, arg.UpdatedAt, arg.UserID)
 }
 
 const DeleteGoadminRoleUser = `-- name: DeleteGoadminRoleUser :exec
 DELETE FROM ` + "`" + `goadmin_role_users` + "`" + `
-WHERE role_id = ?
+WHERE created_at = ?
 `
 
-func (q *Queries) DeleteGoadminRoleUser(ctx context.Context, roleID uint32) error {
-	_, err := q.exec(ctx, q.deleteGoadminRoleUserStmt, DeleteGoadminRoleUser, roleID)
+func (q *Queries) DeleteGoadminRoleUser(ctx context.Context, createdAt time.Time) error {
+	_, err := q.exec(ctx, q.deleteGoadminRoleUserStmt, DeleteGoadminRoleUser, createdAt)
 	return err
 }
 
 const GetGoadminRoleUser = `-- name: GetGoadminRoleUser :one
 SELECT role_id, user_id, created_at, updated_at FROM ` + "`" + `goadmin_role_users` + "`" + `
-WHERE role_id = ? LIMIT 1
+WHERE created_at = ? LIMIT 1
 `
 
-func (q *Queries) GetGoadminRoleUser(ctx context.Context, roleID uint32) (GoadminRoleUser, error) {
-	row := q.queryRow(ctx, q.getGoadminRoleUserStmt, GetGoadminRoleUser, roleID)
+func (q *Queries) GetGoadminRoleUser(ctx context.Context, createdAt time.Time) (GoadminRoleUser, error) {
+	row := q.queryRow(ctx, q.getGoadminRoleUserStmt, GetGoadminRoleUser, createdAt)
 	var i GoadminRoleUser
 	err := row.Scan(
 		&i.RoleID,
@@ -102,28 +103,28 @@ const UpdateGoadminRoleUser = `-- name: UpdateGoadminRoleUser :exec
 UPDATE ` + "`" + `goadmin_role_users` + "`" + `
 SET 
   
-  ` + "`" + `user_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `user_id` + "`" + ` END,
-  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
-  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
-WHERE role_id = ?
+  ` + "`" + `role_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `role_id` + "`" + ` END,
+  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END,
+  ` + "`" + `user_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `user_id` + "`" + ` END
+WHERE created_at = ?
 `
 
 type UpdateGoadminRoleUserParams struct {
-	UserID    uint32       `db:"user_id" json:"user_id"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
-	RoleID    uint32       `db:"role_id" json:"role_id"`
+	RoleID    uint32    `db:"role_id" json:"role_id"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
+	UserID    uint32    `db:"user_id" json:"user_id"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
 }
 
 func (q *Queries) UpdateGoadminRoleUser(ctx context.Context, arg UpdateGoadminRoleUserParams) error {
 	_, err := q.exec(ctx, q.updateGoadminRoleUserStmt, UpdateGoadminRoleUser,
-		arg.UserID,
-		arg.UserID,
-		arg.CreatedAt,
-		arg.CreatedAt,
-		arg.UpdatedAt,
-		arg.UpdatedAt,
 		arg.RoleID,
+		arg.RoleID,
+		arg.UpdatedAt,
+		arg.UpdatedAt,
+		arg.UserID,
+		arg.UserID,
+		arg.CreatedAt,
 	)
 	return err
 }

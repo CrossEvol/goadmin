@@ -11,7 +11,7 @@ SELECT count(*) FROM `goadmin_roles`;
 
 -- name: CreateGoadminRole :execresult
 INSERT INTO `goadmin_roles` (
-`name`,`slug`,`created_at`,`updated_at`
+`created_at`,`name`,`slug`,`updated_at`
 ) VALUES (
 ? ,? ,? ,? 
 );
@@ -19,10 +19,10 @@ INSERT INTO `goadmin_roles` (
 -- name: UpdateGoadminRole :exec
 UPDATE `goadmin_roles`
 SET 
+  `created_at` = CASE WHEN sqlc.arg('created_at') IS NOT NULL THEN sqlc.arg('created_at') ELSE `created_at` END,
   
   `name` = CASE WHEN sqlc.arg('name') IS NOT NULL THEN sqlc.arg('name') ELSE `name` END,
   `slug` = CASE WHEN sqlc.arg('slug') IS NOT NULL THEN sqlc.arg('slug') ELSE `slug` END,
-  `created_at` = CASE WHEN sqlc.arg('created_at') IS NOT NULL THEN sqlc.arg('created_at') ELSE `created_at` END,
   `updated_at` = CASE WHEN sqlc.arg('updated_at') IS NOT NULL THEN sqlc.arg('updated_at') ELSE `updated_at` END
 WHERE id = ?;
 

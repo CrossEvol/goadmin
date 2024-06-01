@@ -8,6 +8,7 @@ package mysqlDao
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const CountGoadminRoleMenus = `-- name: CountGoadminRoleMenus :one
@@ -23,39 +24,39 @@ func (q *Queries) CountGoadminRoleMenus(ctx context.Context) (int64, error) {
 
 const CreateGoadminRoleMenu = `-- name: CreateGoadminRoleMenu :execresult
 INSERT INTO ` + "`" + `goadmin_role_menu` + "`" + ` (
-` + "`" + `menu_id` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `updated_at` + "`" + `
+` + "`" + `menu_id` + "`" + `,` + "`" + `role_id` + "`" + `,` + "`" + `updated_at` + "`" + `
 ) VALUES (
 ? ,? ,? 
 )
 `
 
 type CreateGoadminRoleMenuParams struct {
-	MenuID    uint32       `db:"menu_id" json:"menu_id"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
+	MenuID    uint32    `db:"menu_id" json:"menu_id"`
+	RoleID    uint32    `db:"role_id" json:"role_id"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
 }
 
 func (q *Queries) CreateGoadminRoleMenu(ctx context.Context, arg CreateGoadminRoleMenuParams) (sql.Result, error) {
-	return q.exec(ctx, q.createGoadminRoleMenuStmt, CreateGoadminRoleMenu, arg.MenuID, arg.CreatedAt, arg.UpdatedAt)
+	return q.exec(ctx, q.createGoadminRoleMenuStmt, CreateGoadminRoleMenu, arg.MenuID, arg.RoleID, arg.UpdatedAt)
 }
 
 const DeleteGoadminRoleMenu = `-- name: DeleteGoadminRoleMenu :exec
 DELETE FROM ` + "`" + `goadmin_role_menu` + "`" + `
-WHERE role_id = ?
+WHERE created_at = ?
 `
 
-func (q *Queries) DeleteGoadminRoleMenu(ctx context.Context, roleID uint32) error {
-	_, err := q.exec(ctx, q.deleteGoadminRoleMenuStmt, DeleteGoadminRoleMenu, roleID)
+func (q *Queries) DeleteGoadminRoleMenu(ctx context.Context, createdAt time.Time) error {
+	_, err := q.exec(ctx, q.deleteGoadminRoleMenuStmt, DeleteGoadminRoleMenu, createdAt)
 	return err
 }
 
 const GetGoadminRoleMenu = `-- name: GetGoadminRoleMenu :one
 SELECT role_id, menu_id, created_at, updated_at FROM ` + "`" + `goadmin_role_menu` + "`" + `
-WHERE role_id = ? LIMIT 1
+WHERE created_at = ? LIMIT 1
 `
 
-func (q *Queries) GetGoadminRoleMenu(ctx context.Context, roleID uint32) (GoadminRoleMenu, error) {
-	row := q.queryRow(ctx, q.getGoadminRoleMenuStmt, GetGoadminRoleMenu, roleID)
+func (q *Queries) GetGoadminRoleMenu(ctx context.Context, createdAt time.Time) (GoadminRoleMenu, error) {
+	row := q.queryRow(ctx, q.getGoadminRoleMenuStmt, GetGoadminRoleMenu, createdAt)
 	var i GoadminRoleMenu
 	err := row.Scan(
 		&i.RoleID,
@@ -103,27 +104,27 @@ UPDATE ` + "`" + `goadmin_role_menu` + "`" + `
 SET 
   
   ` + "`" + `menu_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `menu_id` + "`" + ` END,
-  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
+  ` + "`" + `role_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `role_id` + "`" + ` END,
   ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
-WHERE role_id = ?
+WHERE created_at = ?
 `
 
 type UpdateGoadminRoleMenuParams struct {
-	MenuID    uint32       `db:"menu_id" json:"menu_id"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
-	RoleID    uint32       `db:"role_id" json:"role_id"`
+	MenuID    uint32    `db:"menu_id" json:"menu_id"`
+	RoleID    uint32    `db:"role_id" json:"role_id"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
 }
 
 func (q *Queries) UpdateGoadminRoleMenu(ctx context.Context, arg UpdateGoadminRoleMenuParams) error {
 	_, err := q.exec(ctx, q.updateGoadminRoleMenuStmt, UpdateGoadminRoleMenu,
 		arg.MenuID,
 		arg.MenuID,
-		arg.CreatedAt,
-		arg.CreatedAt,
-		arg.UpdatedAt,
-		arg.UpdatedAt,
 		arg.RoleID,
+		arg.RoleID,
+		arg.UpdatedAt,
+		arg.UpdatedAt,
+		arg.CreatedAt,
 	)
 	return err
 }

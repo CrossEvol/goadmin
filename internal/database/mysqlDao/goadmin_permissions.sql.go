@@ -8,6 +8,7 @@ package mysqlDao
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const CountGoadminPermissions = `-- name: CountGoadminPermissions :one
@@ -23,28 +24,28 @@ func (q *Queries) CountGoadminPermissions(ctx context.Context) (int64, error) {
 
 const CreateGoadminPermission = `-- name: CreateGoadminPermission :execresult
 INSERT INTO ` + "`" + `goadmin_permissions` + "`" + ` (
-` + "`" + `name` + "`" + `,` + "`" + `slug` + "`" + `,` + "`" + `http_method` + "`" + `,` + "`" + `http_path` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `updated_at` + "`" + `
+` + "`" + `created_at` + "`" + `,` + "`" + `http_method` + "`" + `,` + "`" + `http_path` + "`" + `,` + "`" + `name` + "`" + `,` + "`" + `slug` + "`" + `,` + "`" + `updated_at` + "`" + `
 ) VALUES (
 ? ,? ,? ,? ,? ,? 
 )
 `
 
 type CreateGoadminPermissionParams struct {
-	Name       string         `db:"name" json:"name"`
-	Slug       string         `db:"slug" json:"slug"`
+	CreatedAt  time.Time      `db:"created_at" json:"created_at"`
 	HttpMethod sql.NullString `db:"http_method" json:"http_method"`
 	HttpPath   string         `db:"http_path" json:"http_path"`
-	CreatedAt  sql.NullTime   `db:"created_at" json:"created_at"`
-	UpdatedAt  sql.NullTime   `db:"updated_at" json:"updated_at"`
+	Name       string         `db:"name" json:"name"`
+	Slug       string         `db:"slug" json:"slug"`
+	UpdatedAt  time.Time      `db:"updated_at" json:"updated_at"`
 }
 
 func (q *Queries) CreateGoadminPermission(ctx context.Context, arg CreateGoadminPermissionParams) (sql.Result, error) {
 	return q.exec(ctx, q.createGoadminPermissionStmt, CreateGoadminPermission,
-		arg.Name,
-		arg.Slug,
+		arg.CreatedAt,
 		arg.HttpMethod,
 		arg.HttpPath,
-		arg.CreatedAt,
+		arg.Name,
+		arg.Slug,
 		arg.UpdatedAt,
 	)
 }
@@ -117,38 +118,38 @@ func (q *Queries) GetGoadminPermissions(ctx context.Context) ([]GoadminPermissio
 const UpdateGoadminPermission = `-- name: UpdateGoadminPermission :exec
 UPDATE ` + "`" + `goadmin_permissions` + "`" + `
 SET 
+  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
+  ` + "`" + `http_method` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `http_method` + "`" + ` END,
+  ` + "`" + `http_path` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `http_path` + "`" + ` END,
   
   ` + "`" + `name` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `name` + "`" + ` END,
   ` + "`" + `slug` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `slug` + "`" + ` END,
-  ` + "`" + `http_method` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `http_method` + "`" + ` END,
-  ` + "`" + `http_path` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `http_path` + "`" + ` END,
-  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
   ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
 WHERE id = ?
 `
 
 type UpdateGoadminPermissionParams struct {
-	Name       string         `db:"name" json:"name"`
-	Slug       string         `db:"slug" json:"slug"`
+	CreatedAt  time.Time      `db:"created_at" json:"created_at"`
 	HttpMethod sql.NullString `db:"http_method" json:"http_method"`
 	HttpPath   string         `db:"http_path" json:"http_path"`
-	CreatedAt  sql.NullTime   `db:"created_at" json:"created_at"`
-	UpdatedAt  sql.NullTime   `db:"updated_at" json:"updated_at"`
+	Name       string         `db:"name" json:"name"`
+	Slug       string         `db:"slug" json:"slug"`
+	UpdatedAt  time.Time      `db:"updated_at" json:"updated_at"`
 	ID         uint32         `db:"id" json:"id"`
 }
 
 func (q *Queries) UpdateGoadminPermission(ctx context.Context, arg UpdateGoadminPermissionParams) error {
 	_, err := q.exec(ctx, q.updateGoadminPermissionStmt, UpdateGoadminPermission,
-		arg.Name,
-		arg.Name,
-		arg.Slug,
-		arg.Slug,
+		arg.CreatedAt,
+		arg.CreatedAt,
 		arg.HttpMethod,
 		arg.HttpMethod,
 		arg.HttpPath,
 		arg.HttpPath,
-		arg.CreatedAt,
-		arg.CreatedAt,
+		arg.Name,
+		arg.Name,
+		arg.Slug,
+		arg.Slug,
 		arg.UpdatedAt,
 		arg.UpdatedAt,
 		arg.ID,

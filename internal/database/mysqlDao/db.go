@@ -180,9 +180,6 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.getGoadminUserStmt, err = db.PrepareContext(ctx, GetGoadminUser); err != nil {
 		return nil, fmt.Errorf("error preparing query GetGoadminUser: %w", err)
 	}
-	if q.getGoadminUserByEmailStmt, err = db.PrepareContext(ctx, GetGoadminUserByEmail); err != nil {
-		return nil, fmt.Errorf("error preparing query GetGoadminUserByEmail: %w", err)
-	}
 	if q.getGoadminUserPermissionStmt, err = db.PrepareContext(ctx, GetGoadminUserPermission); err != nil {
 		return nil, fmt.Errorf("error preparing query GetGoadminUserPermission: %w", err)
 	}
@@ -490,11 +487,6 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing getGoadminUserStmt: %w", cerr)
 		}
 	}
-	if q.getGoadminUserByEmailStmt != nil {
-		if cerr := q.getGoadminUserByEmailStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing getGoadminUserByEmailStmt: %w", cerr)
-		}
-	}
 	if q.getGoadminUserPermissionStmt != nil {
 		if cerr := q.getGoadminUserPermissionStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing getGoadminUserPermissionStmt: %w", cerr)
@@ -656,7 +648,6 @@ type Queries struct {
 	getGoadminSiteStmt              *sql.Stmt
 	getGoadminSitesStmt             *sql.Stmt
 	getGoadminUserStmt              *sql.Stmt
-	getGoadminUserByEmailStmt       *sql.Stmt
 	getGoadminUserPermissionStmt    *sql.Stmt
 	getGoadminUserPermissionsStmt   *sql.Stmt
 	getGoadminUsersStmt             *sql.Stmt
@@ -729,7 +720,6 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		getGoadminSiteStmt:              q.getGoadminSiteStmt,
 		getGoadminSitesStmt:             q.getGoadminSitesStmt,
 		getGoadminUserStmt:              q.getGoadminUserStmt,
-		getGoadminUserByEmailStmt:       q.getGoadminUserByEmailStmt,
 		getGoadminUserPermissionStmt:    q.getGoadminUserPermissionStmt,
 		getGoadminUserPermissionsStmt:   q.getGoadminUserPermissionsStmt,
 		getGoadminUsersStmt:             q.getGoadminUsersStmt,

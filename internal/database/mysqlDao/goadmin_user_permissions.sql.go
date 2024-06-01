@@ -8,6 +8,7 @@ package mysqlDao
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const CountGoadminUserPermissions = `-- name: CountGoadminUserPermissions :one
@@ -23,39 +24,39 @@ func (q *Queries) CountGoadminUserPermissions(ctx context.Context) (int64, error
 
 const CreateGoadminUserPermission = `-- name: CreateGoadminUserPermission :execresult
 INSERT INTO ` + "`" + `goadmin_user_permissions` + "`" + ` (
-` + "`" + `permission_id` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `updated_at` + "`" + `
+` + "`" + `permission_id` + "`" + `,` + "`" + `updated_at` + "`" + `,` + "`" + `user_id` + "`" + `
 ) VALUES (
 ? ,? ,? 
 )
 `
 
 type CreateGoadminUserPermissionParams struct {
-	PermissionID uint32       `db:"permission_id" json:"permission_id"`
-	CreatedAt    sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt    sql.NullTime `db:"updated_at" json:"updated_at"`
+	PermissionID uint32    `db:"permission_id" json:"permission_id"`
+	UpdatedAt    time.Time `db:"updated_at" json:"updated_at"`
+	UserID       uint32    `db:"user_id" json:"user_id"`
 }
 
 func (q *Queries) CreateGoadminUserPermission(ctx context.Context, arg CreateGoadminUserPermissionParams) (sql.Result, error) {
-	return q.exec(ctx, q.createGoadminUserPermissionStmt, CreateGoadminUserPermission, arg.PermissionID, arg.CreatedAt, arg.UpdatedAt)
+	return q.exec(ctx, q.createGoadminUserPermissionStmt, CreateGoadminUserPermission, arg.PermissionID, arg.UpdatedAt, arg.UserID)
 }
 
 const DeleteGoadminUserPermission = `-- name: DeleteGoadminUserPermission :exec
 DELETE FROM ` + "`" + `goadmin_user_permissions` + "`" + `
-WHERE user_id = ?
+WHERE created_at = ?
 `
 
-func (q *Queries) DeleteGoadminUserPermission(ctx context.Context, userID uint32) error {
-	_, err := q.exec(ctx, q.deleteGoadminUserPermissionStmt, DeleteGoadminUserPermission, userID)
+func (q *Queries) DeleteGoadminUserPermission(ctx context.Context, createdAt time.Time) error {
+	_, err := q.exec(ctx, q.deleteGoadminUserPermissionStmt, DeleteGoadminUserPermission, createdAt)
 	return err
 }
 
 const GetGoadminUserPermission = `-- name: GetGoadminUserPermission :one
 SELECT user_id, permission_id, created_at, updated_at FROM ` + "`" + `goadmin_user_permissions` + "`" + `
-WHERE user_id = ? LIMIT 1
+WHERE created_at = ? LIMIT 1
 `
 
-func (q *Queries) GetGoadminUserPermission(ctx context.Context, userID uint32) (GoadminUserPermission, error) {
-	row := q.queryRow(ctx, q.getGoadminUserPermissionStmt, GetGoadminUserPermission, userID)
+func (q *Queries) GetGoadminUserPermission(ctx context.Context, createdAt time.Time) (GoadminUserPermission, error) {
+	row := q.queryRow(ctx, q.getGoadminUserPermissionStmt, GetGoadminUserPermission, createdAt)
 	var i GoadminUserPermission
 	err := row.Scan(
 		&i.UserID,
@@ -103,27 +104,27 @@ UPDATE ` + "`" + `goadmin_user_permissions` + "`" + `
 SET 
   
   ` + "`" + `permission_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `permission_id` + "`" + ` END,
-  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
-  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
-WHERE user_id = ?
+  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END,
+  ` + "`" + `user_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `user_id` + "`" + ` END
+WHERE created_at = ?
 `
 
 type UpdateGoadminUserPermissionParams struct {
-	PermissionID uint32       `db:"permission_id" json:"permission_id"`
-	CreatedAt    sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt    sql.NullTime `db:"updated_at" json:"updated_at"`
-	UserID       uint32       `db:"user_id" json:"user_id"`
+	PermissionID uint32    `db:"permission_id" json:"permission_id"`
+	UpdatedAt    time.Time `db:"updated_at" json:"updated_at"`
+	UserID       uint32    `db:"user_id" json:"user_id"`
+	CreatedAt    time.Time `db:"created_at" json:"created_at"`
 }
 
 func (q *Queries) UpdateGoadminUserPermission(ctx context.Context, arg UpdateGoadminUserPermissionParams) error {
 	_, err := q.exec(ctx, q.updateGoadminUserPermissionStmt, UpdateGoadminUserPermission,
 		arg.PermissionID,
 		arg.PermissionID,
-		arg.CreatedAt,
-		arg.CreatedAt,
 		arg.UpdatedAt,
 		arg.UpdatedAt,
 		arg.UserID,
+		arg.UserID,
+		arg.CreatedAt,
 	)
 	return err
 }

@@ -8,6 +8,7 @@ package mysqlDao
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const CountGoadminSessions = `-- name: CountGoadminSessions :one
@@ -23,25 +24,25 @@ func (q *Queries) CountGoadminSessions(ctx context.Context) (int64, error) {
 
 const CreateGoadminSession = `-- name: CreateGoadminSession :execresult
 INSERT INTO ` + "`" + `goadmin_session` + "`" + ` (
-` + "`" + `sid` + "`" + `,` + "`" + `values` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `updated_at` + "`" + `
+` + "`" + `created_at` + "`" + `,` + "`" + `sid` + "`" + `,` + "`" + `updated_at` + "`" + `,` + "`" + `values` + "`" + `
 ) VALUES (
 ? ,? ,? ,? 
 )
 `
 
 type CreateGoadminSessionParams struct {
-	Sid       string       `db:"sid" json:"sid"`
-	Values    string       `db:"values" json:"values"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	Sid       string    `db:"sid" json:"sid"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
+	Values    string    `db:"values" json:"values"`
 }
 
 func (q *Queries) CreateGoadminSession(ctx context.Context, arg CreateGoadminSessionParams) (sql.Result, error) {
 	return q.exec(ctx, q.createGoadminSessionStmt, CreateGoadminSession,
-		arg.Sid,
-		arg.Values,
 		arg.CreatedAt,
+		arg.Sid,
 		arg.UpdatedAt,
+		arg.Values,
 	)
 }
 
@@ -109,32 +110,32 @@ func (q *Queries) GetGoadminSessions(ctx context.Context) ([]GoadminSession, err
 const UpdateGoadminSession = `-- name: UpdateGoadminSession :exec
 UPDATE ` + "`" + `goadmin_session` + "`" + `
 SET 
+  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
   
   ` + "`" + `sid` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `sid` + "`" + ` END,
-  ` + "`" + `values` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `values` + "`" + ` END,
-  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
-  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
+  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END,
+  ` + "`" + `values` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `values` + "`" + ` END
 WHERE id = ?
 `
 
 type UpdateGoadminSessionParams struct {
-	Sid       string       `db:"sid" json:"sid"`
-	Values    string       `db:"values" json:"values"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
-	ID        uint32       `db:"id" json:"id"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	Sid       string    `db:"sid" json:"sid"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
+	Values    string    `db:"values" json:"values"`
+	ID        uint32    `db:"id" json:"id"`
 }
 
 func (q *Queries) UpdateGoadminSession(ctx context.Context, arg UpdateGoadminSessionParams) error {
 	_, err := q.exec(ctx, q.updateGoadminSessionStmt, UpdateGoadminSession,
-		arg.Sid,
-		arg.Sid,
-		arg.Values,
-		arg.Values,
 		arg.CreatedAt,
 		arg.CreatedAt,
+		arg.Sid,
+		arg.Sid,
 		arg.UpdatedAt,
 		arg.UpdatedAt,
+		arg.Values,
+		arg.Values,
 		arg.ID,
 	)
 	return err

@@ -8,6 +8,7 @@ package mysqlDao
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const CountGoadminRoles = `-- name: CountGoadminRoles :one
@@ -23,24 +24,24 @@ func (q *Queries) CountGoadminRoles(ctx context.Context) (int64, error) {
 
 const CreateGoadminRole = `-- name: CreateGoadminRole :execresult
 INSERT INTO ` + "`" + `goadmin_roles` + "`" + ` (
-` + "`" + `name` + "`" + `,` + "`" + `slug` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `updated_at` + "`" + `
+` + "`" + `created_at` + "`" + `,` + "`" + `name` + "`" + `,` + "`" + `slug` + "`" + `,` + "`" + `updated_at` + "`" + `
 ) VALUES (
 ? ,? ,? ,? 
 )
 `
 
 type CreateGoadminRoleParams struct {
-	Name      string       `db:"name" json:"name"`
-	Slug      string       `db:"slug" json:"slug"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	Name      string    `db:"name" json:"name"`
+	Slug      string    `db:"slug" json:"slug"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
 }
 
 func (q *Queries) CreateGoadminRole(ctx context.Context, arg CreateGoadminRoleParams) (sql.Result, error) {
 	return q.exec(ctx, q.createGoadminRoleStmt, CreateGoadminRole,
+		arg.CreatedAt,
 		arg.Name,
 		arg.Slug,
-		arg.CreatedAt,
 		arg.UpdatedAt,
 	)
 }
@@ -109,30 +110,30 @@ func (q *Queries) GetGoadminRoles(ctx context.Context) ([]GoadminRole, error) {
 const UpdateGoadminRole = `-- name: UpdateGoadminRole :exec
 UPDATE ` + "`" + `goadmin_roles` + "`" + `
 SET 
+  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
   
   ` + "`" + `name` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `name` + "`" + ` END,
   ` + "`" + `slug` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `slug` + "`" + ` END,
-  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
   ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
 WHERE id = ?
 `
 
 type UpdateGoadminRoleParams struct {
-	Name      string       `db:"name" json:"name"`
-	Slug      string       `db:"slug" json:"slug"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
-	ID        uint32       `db:"id" json:"id"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	Name      string    `db:"name" json:"name"`
+	Slug      string    `db:"slug" json:"slug"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
+	ID        uint32    `db:"id" json:"id"`
 }
 
 func (q *Queries) UpdateGoadminRole(ctx context.Context, arg UpdateGoadminRoleParams) error {
 	_, err := q.exec(ctx, q.updateGoadminRoleStmt, UpdateGoadminRole,
+		arg.CreatedAt,
+		arg.CreatedAt,
 		arg.Name,
 		arg.Name,
 		arg.Slug,
 		arg.Slug,
-		arg.CreatedAt,
-		arg.CreatedAt,
 		arg.UpdatedAt,
 		arg.UpdatedAt,
 		arg.ID,

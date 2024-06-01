@@ -1,7 +1,7 @@
 
 -- name: GetGoadminRoleUser :one
 SELECT * FROM `goadmin_role_users`
-WHERE role_id = ? LIMIT 1;
+WHERE created_at = ? LIMIT 1;
 
 -- name: GetGoadminRoleUsers :many
 SELECT * FROM `goadmin_role_users`;
@@ -11,7 +11,7 @@ SELECT count(*) FROM `goadmin_role_users`;
 
 -- name: CreateGoadminRoleUser :execresult
 INSERT INTO `goadmin_role_users` (
-`user_id`,`created_at`,`updated_at`
+`role_id`,`updated_at`,`user_id`
 ) VALUES (
 ? ,? ,? 
 );
@@ -20,11 +20,11 @@ INSERT INTO `goadmin_role_users` (
 UPDATE `goadmin_role_users`
 SET 
   
-  `user_id` = CASE WHEN sqlc.arg('user_id') IS NOT NULL THEN sqlc.arg('user_id') ELSE `user_id` END,
-  `created_at` = CASE WHEN sqlc.arg('created_at') IS NOT NULL THEN sqlc.arg('created_at') ELSE `created_at` END,
-  `updated_at` = CASE WHEN sqlc.arg('updated_at') IS NOT NULL THEN sqlc.arg('updated_at') ELSE `updated_at` END
-WHERE role_id = ?;
+  `role_id` = CASE WHEN sqlc.arg('role_id') IS NOT NULL THEN sqlc.arg('role_id') ELSE `role_id` END,
+  `updated_at` = CASE WHEN sqlc.arg('updated_at') IS NOT NULL THEN sqlc.arg('updated_at') ELSE `updated_at` END,
+  `user_id` = CASE WHEN sqlc.arg('user_id') IS NOT NULL THEN sqlc.arg('user_id') ELSE `user_id` END
+WHERE created_at = ?;
 
 -- name: DeleteGoadminRoleUser :exec
 DELETE FROM `goadmin_role_users`
-WHERE role_id = ?;
+WHERE created_at = ?;

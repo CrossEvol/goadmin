@@ -8,6 +8,7 @@ package mysqlDao
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const CountGoadminMenus = `-- name: CountGoadminMenus :one
@@ -23,39 +24,39 @@ func (q *Queries) CountGoadminMenus(ctx context.Context) (int64, error) {
 
 const CreateGoadminMenu = `-- name: CreateGoadminMenu :execresult
 INSERT INTO ` + "`" + `goadmin_menu` + "`" + ` (
-` + "`" + `parent_id` + "`" + `,` + "`" + `type` + "`" + `,` + "`" + `order` + "`" + `,` + "`" + `title` + "`" + `,` + "`" + `icon` + "`" + `,` + "`" + `uri` + "`" + `,` + "`" + `header` + "`" + `,` + "`" + `plugin_name` + "`" + `,` + "`" + `uuid` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `updated_at` + "`" + `
+` + "`" + `created_at` + "`" + `,` + "`" + `header` + "`" + `,` + "`" + `icon` + "`" + `,` + "`" + `order` + "`" + `,` + "`" + `parent_id` + "`" + `,` + "`" + `plugin_name` + "`" + `,` + "`" + `title` + "`" + `,` + "`" + `type` + "`" + `,` + "`" + `updated_at` + "`" + `,` + "`" + `uri` + "`" + `,` + "`" + `uuid` + "`" + `
 ) VALUES (
 ? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? 
 )
 `
 
 type CreateGoadminMenuParams struct {
-	ParentID   uint32         `db:"parent_id" json:"parent_id"`
-	Type       uint32         `db:"type" json:"type"`
-	Order      uint32         `db:"order" json:"order"`
-	Title      string         `db:"title" json:"title"`
-	Icon       string         `db:"icon" json:"icon"`
-	Uri        string         `db:"uri" json:"uri"`
+	CreatedAt  time.Time      `db:"created_at" json:"created_at"`
 	Header     sql.NullString `db:"header" json:"header"`
+	Icon       string         `db:"icon" json:"icon"`
+	Order      uint32         `db:"order" json:"order"`
+	ParentID   uint32         `db:"parent_id" json:"parent_id"`
 	PluginName string         `db:"plugin_name" json:"plugin_name"`
+	Title      string         `db:"title" json:"title"`
+	Type       uint32         `db:"type" json:"type"`
+	UpdatedAt  time.Time      `db:"updated_at" json:"updated_at"`
+	Uri        string         `db:"uri" json:"uri"`
 	Uuid       sql.NullString `db:"uuid" json:"uuid"`
-	CreatedAt  sql.NullTime   `db:"created_at" json:"created_at"`
-	UpdatedAt  sql.NullTime   `db:"updated_at" json:"updated_at"`
 }
 
 func (q *Queries) CreateGoadminMenu(ctx context.Context, arg CreateGoadminMenuParams) (sql.Result, error) {
 	return q.exec(ctx, q.createGoadminMenuStmt, CreateGoadminMenu,
-		arg.ParentID,
-		arg.Type,
-		arg.Order,
-		arg.Title,
-		arg.Icon,
-		arg.Uri,
-		arg.Header,
-		arg.PluginName,
-		arg.Uuid,
 		arg.CreatedAt,
+		arg.Header,
+		arg.Icon,
+		arg.Order,
+		arg.ParentID,
+		arg.PluginName,
+		arg.Title,
+		arg.Type,
 		arg.UpdatedAt,
+		arg.Uri,
+		arg.Uuid,
 	)
 }
 
@@ -137,60 +138,60 @@ func (q *Queries) GetGoadminMenus(ctx context.Context) ([]GoadminMenu, error) {
 const UpdateGoadminMenu = `-- name: UpdateGoadminMenu :exec
 UPDATE ` + "`" + `goadmin_menu` + "`" + `
 SET 
-  
-  ` + "`" + `parent_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `parent_id` + "`" + ` END,
-  ` + "`" + `type` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `type` + "`" + ` END,
-  ` + "`" + `order` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `order` + "`" + ` END,
-  ` + "`" + `title` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `title` + "`" + ` END,
-  ` + "`" + `icon` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `icon` + "`" + ` END,
-  ` + "`" + `uri` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `uri` + "`" + ` END,
-  ` + "`" + `header` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `header` + "`" + ` END,
-  ` + "`" + `plugin_name` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `plugin_name` + "`" + ` END,
-  ` + "`" + `uuid` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `uuid` + "`" + ` END,
   ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
-  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
+  ` + "`" + `header` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `header` + "`" + ` END,
+  ` + "`" + `icon` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `icon` + "`" + ` END,
+  
+  ` + "`" + `order` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `order` + "`" + ` END,
+  ` + "`" + `parent_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `parent_id` + "`" + ` END,
+  ` + "`" + `plugin_name` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `plugin_name` + "`" + ` END,
+  ` + "`" + `title` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `title` + "`" + ` END,
+  ` + "`" + `type` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `type` + "`" + ` END,
+  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END,
+  ` + "`" + `uri` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `uri` + "`" + ` END,
+  ` + "`" + `uuid` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `uuid` + "`" + ` END
 WHERE id = ?
 `
 
 type UpdateGoadminMenuParams struct {
-	ParentID   uint32         `db:"parent_id" json:"parent_id"`
-	Type       uint32         `db:"type" json:"type"`
-	Order      uint32         `db:"order" json:"order"`
-	Title      string         `db:"title" json:"title"`
-	Icon       string         `db:"icon" json:"icon"`
-	Uri        string         `db:"uri" json:"uri"`
+	CreatedAt  time.Time      `db:"created_at" json:"created_at"`
 	Header     sql.NullString `db:"header" json:"header"`
+	Icon       string         `db:"icon" json:"icon"`
+	Order      uint32         `db:"order" json:"order"`
+	ParentID   uint32         `db:"parent_id" json:"parent_id"`
 	PluginName string         `db:"plugin_name" json:"plugin_name"`
+	Title      string         `db:"title" json:"title"`
+	Type       uint32         `db:"type" json:"type"`
+	UpdatedAt  time.Time      `db:"updated_at" json:"updated_at"`
+	Uri        string         `db:"uri" json:"uri"`
 	Uuid       sql.NullString `db:"uuid" json:"uuid"`
-	CreatedAt  sql.NullTime   `db:"created_at" json:"created_at"`
-	UpdatedAt  sql.NullTime   `db:"updated_at" json:"updated_at"`
 	ID         uint32         `db:"id" json:"id"`
 }
 
 func (q *Queries) UpdateGoadminMenu(ctx context.Context, arg UpdateGoadminMenuParams) error {
 	_, err := q.exec(ctx, q.updateGoadminMenuStmt, UpdateGoadminMenu,
-		arg.ParentID,
-		arg.ParentID,
-		arg.Type,
-		arg.Type,
-		arg.Order,
-		arg.Order,
-		arg.Title,
-		arg.Title,
-		arg.Icon,
-		arg.Icon,
-		arg.Uri,
-		arg.Uri,
-		arg.Header,
-		arg.Header,
-		arg.PluginName,
-		arg.PluginName,
-		arg.Uuid,
-		arg.Uuid,
 		arg.CreatedAt,
 		arg.CreatedAt,
+		arg.Header,
+		arg.Header,
+		arg.Icon,
+		arg.Icon,
+		arg.Order,
+		arg.Order,
+		arg.ParentID,
+		arg.ParentID,
+		arg.PluginName,
+		arg.PluginName,
+		arg.Title,
+		arg.Title,
+		arg.Type,
+		arg.Type,
 		arg.UpdatedAt,
 		arg.UpdatedAt,
+		arg.Uri,
+		arg.Uri,
+		arg.Uuid,
+		arg.Uuid,
 		arg.ID,
 	)
 	return err

@@ -1,7 +1,7 @@
 
 -- name: GetGoadminRoleMenu :one
 SELECT * FROM `goadmin_role_menu`
-WHERE role_id = ? LIMIT 1;
+WHERE created_at = ? LIMIT 1;
 
 -- name: GetGoadminRoleMenus :many
 SELECT * FROM `goadmin_role_menu`;
@@ -11,7 +11,7 @@ SELECT count(*) FROM `goadmin_role_menu`;
 
 -- name: CreateGoadminRoleMenu :execresult
 INSERT INTO `goadmin_role_menu` (
-`menu_id`,`created_at`,`updated_at`
+`menu_id`,`role_id`,`updated_at`
 ) VALUES (
 ? ,? ,? 
 );
@@ -21,10 +21,10 @@ UPDATE `goadmin_role_menu`
 SET 
   
   `menu_id` = CASE WHEN sqlc.arg('menu_id') IS NOT NULL THEN sqlc.arg('menu_id') ELSE `menu_id` END,
-  `created_at` = CASE WHEN sqlc.arg('created_at') IS NOT NULL THEN sqlc.arg('created_at') ELSE `created_at` END,
+  `role_id` = CASE WHEN sqlc.arg('role_id') IS NOT NULL THEN sqlc.arg('role_id') ELSE `role_id` END,
   `updated_at` = CASE WHEN sqlc.arg('updated_at') IS NOT NULL THEN sqlc.arg('updated_at') ELSE `updated_at` END
-WHERE role_id = ?;
+WHERE created_at = ?;
 
 -- name: DeleteGoadminRoleMenu :exec
 DELETE FROM `goadmin_role_menu`
-WHERE role_id = ?;
+WHERE created_at = ?;

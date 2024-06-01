@@ -7,6 +7,7 @@ package mysqlDao
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 type Querier interface {
@@ -36,13 +37,13 @@ type Querier interface {
 	DeleteGoadminOperationLog(ctx context.Context, id uint32) error
 	DeleteGoadminPermission(ctx context.Context, id uint32) error
 	DeleteGoadminRole(ctx context.Context, id uint32) error
-	DeleteGoadminRoleMenu(ctx context.Context, roleID uint32) error
-	DeleteGoadminRolePermission(ctx context.Context, roleID uint32) error
-	DeleteGoadminRoleUser(ctx context.Context, roleID uint32) error
+	DeleteGoadminRoleMenu(ctx context.Context, createdAt time.Time) error
+	DeleteGoadminRolePermission(ctx context.Context, createdAt time.Time) error
+	DeleteGoadminRoleUser(ctx context.Context, createdAt time.Time) error
 	DeleteGoadminSession(ctx context.Context, id uint32) error
 	DeleteGoadminSite(ctx context.Context, id uint32) error
 	DeleteGoadminUser(ctx context.Context, id uint32) error
-	DeleteGoadminUserPermission(ctx context.Context, userID uint32) error
+	DeleteGoadminUserPermission(ctx context.Context, createdAt time.Time) error
 	GetGoadminMenu(ctx context.Context, id uint32) (GoadminMenu, error)
 	GetGoadminMenus(ctx context.Context) ([]GoadminMenu, error)
 	GetGoadminOperationLog(ctx context.Context, id uint32) (GoadminOperationLog, error)
@@ -50,11 +51,11 @@ type Querier interface {
 	GetGoadminPermission(ctx context.Context, id uint32) (GoadminPermission, error)
 	GetGoadminPermissions(ctx context.Context) ([]GoadminPermission, error)
 	GetGoadminRole(ctx context.Context, id uint32) (GoadminRole, error)
-	GetGoadminRoleMenu(ctx context.Context, roleID uint32) (GoadminRoleMenu, error)
+	GetGoadminRoleMenu(ctx context.Context, createdAt time.Time) (GoadminRoleMenu, error)
 	GetGoadminRoleMenus(ctx context.Context) ([]GoadminRoleMenu, error)
-	GetGoadminRolePermission(ctx context.Context, roleID uint32) (GoadminRolePermission, error)
+	GetGoadminRolePermission(ctx context.Context, createdAt time.Time) (GoadminRolePermission, error)
 	GetGoadminRolePermissions(ctx context.Context) ([]GoadminRolePermission, error)
-	GetGoadminRoleUser(ctx context.Context, roleID uint32) (GoadminRoleUser, error)
+	GetGoadminRoleUser(ctx context.Context, createdAt time.Time) (GoadminRoleUser, error)
 	GetGoadminRoleUsers(ctx context.Context) ([]GoadminRoleUser, error)
 	GetGoadminRoles(ctx context.Context) ([]GoadminRole, error)
 	GetGoadminSession(ctx context.Context, id uint32) (GoadminSession, error)
@@ -62,8 +63,7 @@ type Querier interface {
 	GetGoadminSite(ctx context.Context, id uint32) (GoadminSite, error)
 	GetGoadminSites(ctx context.Context) ([]GoadminSite, error)
 	GetGoadminUser(ctx context.Context, id uint32) (GoadminUser, error)
-	GetGoadminUserByEmail(ctx context.Context, email string) (GoadminUser, error)
-	GetGoadminUserPermission(ctx context.Context, userID uint32) (GoadminUserPermission, error)
+	GetGoadminUserPermission(ctx context.Context, createdAt time.Time) (GoadminUserPermission, error)
 	GetGoadminUserPermissions(ctx context.Context) ([]GoadminUserPermission, error)
 	GetGoadminUsers(ctx context.Context) ([]GoadminUser, error)
 	UpdateGoadminMenu(ctx context.Context, arg UpdateGoadminMenuParams) error

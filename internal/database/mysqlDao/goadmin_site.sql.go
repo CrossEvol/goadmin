@@ -8,6 +8,7 @@ package mysqlDao
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const CountGoadminSites = `-- name: CountGoadminSites :one
@@ -23,29 +24,29 @@ func (q *Queries) CountGoadminSites(ctx context.Context) (int64, error) {
 
 const CreateGoadminSite = `-- name: CreateGoadminSite :execresult
 INSERT INTO ` + "`" + `goadmin_site` + "`" + ` (
-` + "`" + `key` + "`" + `,` + "`" + `value` + "`" + `,` + "`" + `description` + "`" + `,` + "`" + `state` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `updated_at` + "`" + `
+` + "`" + `created_at` + "`" + `,` + "`" + `description` + "`" + `,` + "`" + `key` + "`" + `,` + "`" + `state` + "`" + `,` + "`" + `updated_at` + "`" + `,` + "`" + `value` + "`" + `
 ) VALUES (
 ? ,? ,? ,? ,? ,? 
 )
 `
 
 type CreateGoadminSiteParams struct {
-	Key         sql.NullString `db:"key" json:"key"`
-	Value       sql.NullString `db:"value" json:"value"`
+	CreatedAt   time.Time      `db:"created_at" json:"created_at"`
 	Description sql.NullString `db:"description" json:"description"`
+	Key         sql.NullString `db:"key" json:"key"`
 	State       uint32         `db:"state" json:"state"`
-	CreatedAt   sql.NullTime   `db:"created_at" json:"created_at"`
-	UpdatedAt   sql.NullTime   `db:"updated_at" json:"updated_at"`
+	UpdatedAt   time.Time      `db:"updated_at" json:"updated_at"`
+	Value       sql.NullString `db:"value" json:"value"`
 }
 
 func (q *Queries) CreateGoadminSite(ctx context.Context, arg CreateGoadminSiteParams) (sql.Result, error) {
 	return q.exec(ctx, q.createGoadminSiteStmt, CreateGoadminSite,
-		arg.Key,
-		arg.Value,
-		arg.Description,
-		arg.State,
 		arg.CreatedAt,
+		arg.Description,
+		arg.Key,
+		arg.State,
 		arg.UpdatedAt,
+		arg.Value,
 	)
 }
 
@@ -117,40 +118,40 @@ func (q *Queries) GetGoadminSites(ctx context.Context) ([]GoadminSite, error) {
 const UpdateGoadminSite = `-- name: UpdateGoadminSite :exec
 UPDATE ` + "`" + `goadmin_site` + "`" + `
 SET 
+  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
+  ` + "`" + `description` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `description` + "`" + ` END,
   
   ` + "`" + `key` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `key` + "`" + ` END,
-  ` + "`" + `value` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `value` + "`" + ` END,
-  ` + "`" + `description` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `description` + "`" + ` END,
   ` + "`" + `state` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `state` + "`" + ` END,
-  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
-  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
+  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END,
+  ` + "`" + `value` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `value` + "`" + ` END
 WHERE id = ?
 `
 
 type UpdateGoadminSiteParams struct {
-	Key         sql.NullString `db:"key" json:"key"`
-	Value       sql.NullString `db:"value" json:"value"`
+	CreatedAt   time.Time      `db:"created_at" json:"created_at"`
 	Description sql.NullString `db:"description" json:"description"`
+	Key         sql.NullString `db:"key" json:"key"`
 	State       uint32         `db:"state" json:"state"`
-	CreatedAt   sql.NullTime   `db:"created_at" json:"created_at"`
-	UpdatedAt   sql.NullTime   `db:"updated_at" json:"updated_at"`
+	UpdatedAt   time.Time      `db:"updated_at" json:"updated_at"`
+	Value       sql.NullString `db:"value" json:"value"`
 	ID          uint32         `db:"id" json:"id"`
 }
 
 func (q *Queries) UpdateGoadminSite(ctx context.Context, arg UpdateGoadminSiteParams) error {
 	_, err := q.exec(ctx, q.updateGoadminSiteStmt, UpdateGoadminSite,
-		arg.Key,
-		arg.Key,
-		arg.Value,
-		arg.Value,
-		arg.Description,
-		arg.Description,
-		arg.State,
-		arg.State,
 		arg.CreatedAt,
 		arg.CreatedAt,
+		arg.Description,
+		arg.Description,
+		arg.Key,
+		arg.Key,
+		arg.State,
+		arg.State,
 		arg.UpdatedAt,
 		arg.UpdatedAt,
+		arg.Value,
+		arg.Value,
 		arg.ID,
 	)
 	return err

@@ -6,6 +6,7 @@ package mysqlDao
 
 import (
 	"database/sql"
+	"time"
 )
 
 type GoadminMenu struct {
@@ -19,19 +20,19 @@ type GoadminMenu struct {
 	Header     sql.NullString `db:"header" json:"header"`
 	PluginName string         `db:"plugin_name" json:"plugin_name"`
 	Uuid       sql.NullString `db:"uuid" json:"uuid"`
-	CreatedAt  sql.NullTime   `db:"created_at" json:"created_at"`
-	UpdatedAt  sql.NullTime   `db:"updated_at" json:"updated_at"`
+	CreatedAt  time.Time      `db:"created_at" json:"created_at"`
+	UpdatedAt  time.Time      `db:"updated_at" json:"updated_at"`
 }
 
 type GoadminOperationLog struct {
-	ID        uint32       `db:"id" json:"id"`
-	UserID    uint32       `db:"user_id" json:"user_id"`
-	Path      string       `db:"path" json:"path"`
-	Method    string       `db:"method" json:"method"`
-	Ip        string       `db:"ip" json:"ip"`
-	Input     string       `db:"input" json:"input"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
+	ID        uint32    `db:"id" json:"id"`
+	UserID    uint32    `db:"user_id" json:"user_id"`
+	Path      string    `db:"path" json:"path"`
+	Method    string    `db:"method" json:"method"`
+	Ip        string    `db:"ip" json:"ip"`
+	Input     string    `db:"input" json:"input"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
 }
 
 type GoadminPermission struct {
@@ -40,45 +41,45 @@ type GoadminPermission struct {
 	Slug       string         `db:"slug" json:"slug"`
 	HttpMethod sql.NullString `db:"http_method" json:"http_method"`
 	HttpPath   string         `db:"http_path" json:"http_path"`
-	CreatedAt  sql.NullTime   `db:"created_at" json:"created_at"`
-	UpdatedAt  sql.NullTime   `db:"updated_at" json:"updated_at"`
+	CreatedAt  time.Time      `db:"created_at" json:"created_at"`
+	UpdatedAt  time.Time      `db:"updated_at" json:"updated_at"`
 }
 
 type GoadminRole struct {
-	ID        uint32       `db:"id" json:"id"`
-	Name      string       `db:"name" json:"name"`
-	Slug      string       `db:"slug" json:"slug"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
+	ID        uint32    `db:"id" json:"id"`
+	Name      string    `db:"name" json:"name"`
+	Slug      string    `db:"slug" json:"slug"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
 }
 
 type GoadminRoleMenu struct {
-	RoleID    uint32       `db:"role_id" json:"role_id"`
-	MenuID    uint32       `db:"menu_id" json:"menu_id"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
+	RoleID    uint32    `db:"role_id" json:"role_id"`
+	MenuID    uint32    `db:"menu_id" json:"menu_id"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
 }
 
 type GoadminRolePermission struct {
-	RoleID       uint32       `db:"role_id" json:"role_id"`
-	PermissionID uint32       `db:"permission_id" json:"permission_id"`
-	CreatedAt    sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt    sql.NullTime `db:"updated_at" json:"updated_at"`
+	RoleID       uint32    `db:"role_id" json:"role_id"`
+	PermissionID uint32    `db:"permission_id" json:"permission_id"`
+	CreatedAt    time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt    time.Time `db:"updated_at" json:"updated_at"`
 }
 
 type GoadminRoleUser struct {
-	RoleID    uint32       `db:"role_id" json:"role_id"`
-	UserID    uint32       `db:"user_id" json:"user_id"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
+	RoleID    uint32    `db:"role_id" json:"role_id"`
+	UserID    uint32    `db:"user_id" json:"user_id"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
 }
 
 type GoadminSession struct {
-	ID        uint32       `db:"id" json:"id"`
-	Sid       string       `db:"sid" json:"sid"`
-	Values    string       `db:"values" json:"values"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
+	ID        uint32    `db:"id" json:"id"`
+	Sid       string    `db:"sid" json:"sid"`
+	Values    string    `db:"values" json:"values"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
 }
 
 type GoadminSite struct {
@@ -87,8 +88,8 @@ type GoadminSite struct {
 	Value       sql.NullString `db:"value" json:"value"`
 	Description sql.NullString `db:"description" json:"description"`
 	State       uint32         `db:"state" json:"state"`
-	CreatedAt   sql.NullTime   `db:"created_at" json:"created_at"`
-	UpdatedAt   sql.NullTime   `db:"updated_at" json:"updated_at"`
+	CreatedAt   time.Time      `db:"created_at" json:"created_at"`
+	UpdatedAt   time.Time      `db:"updated_at" json:"updated_at"`
 }
 
 type GoadminUser struct {
@@ -98,14 +99,14 @@ type GoadminUser struct {
 	Name          string         `db:"name" json:"name"`
 	Avatar        sql.NullString `db:"avatar" json:"avatar"`
 	RememberToken sql.NullString `db:"remember_token" json:"remember_token"`
-	CreatedAt     sql.NullTime   `db:"created_at" json:"created_at"`
-	UpdatedAt     sql.NullTime   `db:"updated_at" json:"updated_at"`
 	Email         string         `db:"email" json:"email"`
+	CreatedAt     time.Time      `db:"created_at" json:"created_at"`
+	UpdatedAt     time.Time      `db:"updated_at" json:"updated_at"`
 }
 
 type GoadminUserPermission struct {
-	UserID       uint32       `db:"user_id" json:"user_id"`
-	PermissionID uint32       `db:"permission_id" json:"permission_id"`
-	CreatedAt    sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt    sql.NullTime `db:"updated_at" json:"updated_at"`
+	UserID       uint32    `db:"user_id" json:"user_id"`
+	PermissionID uint32    `db:"permission_id" json:"permission_id"`
+	CreatedAt    time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt    time.Time `db:"updated_at" json:"updated_at"`
 }

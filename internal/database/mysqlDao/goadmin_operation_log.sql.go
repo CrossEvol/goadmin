@@ -8,6 +8,7 @@ package mysqlDao
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const CountGoadminOperationLogs = `-- name: CountGoadminOperationLogs :one
@@ -23,31 +24,31 @@ func (q *Queries) CountGoadminOperationLogs(ctx context.Context) (int64, error) 
 
 const CreateGoadminOperationLog = `-- name: CreateGoadminOperationLog :execresult
 INSERT INTO ` + "`" + `goadmin_operation_log` + "`" + ` (
-` + "`" + `user_id` + "`" + `,` + "`" + `path` + "`" + `,` + "`" + `method` + "`" + `,` + "`" + `ip` + "`" + `,` + "`" + `input` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `updated_at` + "`" + `
+` + "`" + `created_at` + "`" + `,` + "`" + `input` + "`" + `,` + "`" + `ip` + "`" + `,` + "`" + `method` + "`" + `,` + "`" + `path` + "`" + `,` + "`" + `updated_at` + "`" + `,` + "`" + `user_id` + "`" + `
 ) VALUES (
 ? ,? ,? ,? ,? ,? ,? 
 )
 `
 
 type CreateGoadminOperationLogParams struct {
-	UserID    uint32       `db:"user_id" json:"user_id"`
-	Path      string       `db:"path" json:"path"`
-	Method    string       `db:"method" json:"method"`
-	Ip        string       `db:"ip" json:"ip"`
-	Input     string       `db:"input" json:"input"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	Input     string    `db:"input" json:"input"`
+	Ip        string    `db:"ip" json:"ip"`
+	Method    string    `db:"method" json:"method"`
+	Path      string    `db:"path" json:"path"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
+	UserID    uint32    `db:"user_id" json:"user_id"`
 }
 
 func (q *Queries) CreateGoadminOperationLog(ctx context.Context, arg CreateGoadminOperationLogParams) (sql.Result, error) {
 	return q.exec(ctx, q.createGoadminOperationLogStmt, CreateGoadminOperationLog,
-		arg.UserID,
-		arg.Path,
-		arg.Method,
-		arg.Ip,
-		arg.Input,
 		arg.CreatedAt,
+		arg.Input,
+		arg.Ip,
+		arg.Method,
+		arg.Path,
 		arg.UpdatedAt,
+		arg.UserID,
 	)
 }
 
@@ -121,44 +122,44 @@ func (q *Queries) GetGoadminOperationLogs(ctx context.Context) ([]GoadminOperati
 const UpdateGoadminOperationLog = `-- name: UpdateGoadminOperationLog :exec
 UPDATE ` + "`" + `goadmin_operation_log` + "`" + `
 SET 
-  
-  ` + "`" + `user_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `user_id` + "`" + ` END,
-  ` + "`" + `path` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `path` + "`" + ` END,
-  ` + "`" + `method` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `method` + "`" + ` END,
-  ` + "`" + `ip` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `ip` + "`" + ` END,
-  ` + "`" + `input` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `input` + "`" + ` END,
   ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
-  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
+  
+  ` + "`" + `input` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `input` + "`" + ` END,
+  ` + "`" + `ip` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `ip` + "`" + ` END,
+  ` + "`" + `method` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `method` + "`" + ` END,
+  ` + "`" + `path` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `path` + "`" + ` END,
+  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END,
+  ` + "`" + `user_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `user_id` + "`" + ` END
 WHERE id = ?
 `
 
 type UpdateGoadminOperationLogParams struct {
-	UserID    uint32       `db:"user_id" json:"user_id"`
-	Path      string       `db:"path" json:"path"`
-	Method    string       `db:"method" json:"method"`
-	Ip        string       `db:"ip" json:"ip"`
-	Input     string       `db:"input" json:"input"`
-	CreatedAt sql.NullTime `db:"created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" json:"updated_at"`
-	ID        uint32       `db:"id" json:"id"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	Input     string    `db:"input" json:"input"`
+	Ip        string    `db:"ip" json:"ip"`
+	Method    string    `db:"method" json:"method"`
+	Path      string    `db:"path" json:"path"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
+	UserID    uint32    `db:"user_id" json:"user_id"`
+	ID        uint32    `db:"id" json:"id"`
 }
 
 func (q *Queries) UpdateGoadminOperationLog(ctx context.Context, arg UpdateGoadminOperationLogParams) error {
 	_, err := q.exec(ctx, q.updateGoadminOperationLogStmt, UpdateGoadminOperationLog,
-		arg.UserID,
-		arg.UserID,
-		arg.Path,
-		arg.Path,
-		arg.Method,
-		arg.Method,
-		arg.Ip,
-		arg.Ip,
-		arg.Input,
-		arg.Input,
 		arg.CreatedAt,
 		arg.CreatedAt,
+		arg.Input,
+		arg.Input,
+		arg.Ip,
+		arg.Ip,
+		arg.Method,
+		arg.Method,
+		arg.Path,
+		arg.Path,
 		arg.UpdatedAt,
 		arg.UpdatedAt,
+		arg.UserID,
+		arg.UserID,
 		arg.ID,
 	)
 	return err
