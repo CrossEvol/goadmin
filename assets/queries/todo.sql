@@ -27,7 +27,6 @@ SET
   `amount` = CASE WHEN sqlc.arg('amount') IS NOT NULL THEN sqlc.arg('amount') ELSE `amount` END,
   `category_id` = CASE WHEN sqlc.arg('category_id') IS NOT NULL THEN sqlc.arg('category_id') ELSE `category_id` END,
   `content` = CASE WHEN sqlc.arg('content') IS NOT NULL THEN sqlc.arg('content') ELSE `content` END,
-  `created_at` = CASE WHEN sqlc.arg('created_at') IS NOT NULL THEN sqlc.arg('created_at') ELSE `created_at` END,
   `deadline` = CASE WHEN sqlc.arg('deadline') IS NOT NULL THEN sqlc.arg('deadline') ELSE `deadline` END,
   
   `priority` = CASE WHEN sqlc.arg('priority') IS NOT NULL THEN sqlc.arg('priority') ELSE `priority` END,

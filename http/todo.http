@@ -2,20 +2,18 @@ DELETE {{url}}/todo/11
 Accept: application/json
 
 ###
-PATCH {{url}}/todo/11
+PATCH {{url}}/todo/13
 Content-Type: application/json
 
 {
   "amount": 10.5,
   "category_id": null,
   "content": "This is a todo item",
-  "created_at": "2024-06-01T16:50:00.4348255+08:00",
-  "deadline": "2024-06-01T16:50:00.4348255+08:00",
+  "deadline": 1717241699200,
   "priority": "HIGH",
   "score": 75,
   "status": "PENDING",
-  "title": "Important Task",
-  "updated_at": "2024-06-01T16:50:00.4348255+08:00"
+  "title": "Important Task"
 }
 
 ###
@@ -26,13 +24,11 @@ Content-Type: application/json
   "amount": 10.5,
   "category_id": null,
   "content": "This is a todo item",
-  "created_at": "2024-06-01T16:00:00Z",
-  "deadline": "2024-06-01T16:00:00Z",
+  "deadline": 1717241699200,
   "priority": "HIGH",
   "score": 75,
   "status": "PENDING",
-  "title": "Important Task",
-  "updated_at": "2024-06-01T16:50:00.4348255+08:00"
+  "title": "Important Task"
 }
 
 

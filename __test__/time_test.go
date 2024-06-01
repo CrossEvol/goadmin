@@ -26,3 +26,9 @@ func TestName(t *testing.T) {
 	}
 	fmt.Println(d2)
 }
+
+func TestTimeMillions(t *testing.T) {
+	milli := time.Now().UnixMilli()
+	ti := time.UnixMilli(milli)
+	fmt.Println(ti)
+}

@@ -189,7 +189,6 @@ SET
   ` + "`" + `amount` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `amount` + "`" + ` END,
   ` + "`" + `category_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `category_id` + "`" + ` END,
   ` + "`" + `content` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `content` + "`" + ` END,
-  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
   ` + "`" + `deadline` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `deadline` + "`" + ` END,
   
   ` + "`" + `priority` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `priority` + "`" + ` END,
@@ -204,7 +203,6 @@ type UpdateTodoParams struct {
 	Amount     float64       `db:"amount" json:"amount"`
 	CategoryID sql.NullInt32 `db:"category_id" json:"category_id"`
 	Content    string        `db:"content" json:"content"`
-	CreatedAt  time.Time     `db:"created_at" json:"created_at"`
 	Deadline   time.Time     `db:"deadline" json:"deadline"`
 	Priority   TodoPriority  `db:"priority" json:"priority"`
 	Score      int           `db:"score" json:"score"`
@@ -222,8 +220,6 @@ func (q *Queries) UpdateTodo(ctx context.Context, arg UpdateTodoParams) (sql.Res
 		arg.CategoryID,
 		arg.Content,
 		arg.Content,
-		arg.CreatedAt,
-		arg.CreatedAt,
 		arg.Deadline,
 		arg.Deadline,
 		arg.Priority,

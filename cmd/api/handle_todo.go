@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/crossevol/goadmin/internal/database/mysqlDao"
+	"github.com/crossevol/goadmin/internal/models/dto"
 	"github.com/crossevol/goadmin/internal/request"
 	"github.com/crossevol/goadmin/internal/response"
 	"github.com/crossevol/goadmin/internal/utils"
@@ -63,13 +63,14 @@ func (app *application) GetTodoByIDs(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) CreateTodo(w http.ResponseWriter, r *http.Request) {
-	createTodoParams := mysqlDao.CreateTodoParams{}
-	err := request.DecodeJSON(w, r, &createTodoParams)
+	createTodoDTO := dto.CreateTodoDTO{}
+	err := request.DecodeJSON(w, r, &createTodoDTO)
 	if err != nil {
 		app.badRequest(w, r, err)
 		return
 	}
-	result, err := app.q.CreateTodo(*app.ctx, createTodoParams)
+	createTodoParams := dto.NewCreateTodoParams(&createTodoDTO)
+	result, err := app.q.CreateTodo(*app.ctx, *createTodoParams)
 	if err != nil {
 		app.serverError(w, r, err)
 		return
@@ -94,14 +95,15 @@ func (app *application) UpdateTodo(w http.ResponseWriter, r *http.Request) {
 		app.badRequest(w, r, err)
 		return
 	}
-	updateTodoParams := mysqlDao.UpdateTodoParams{}
-	err = request.DecodeJSON(w, r, &updateTodoParams)
+	updateTodoDTO := dto.UpdateTodoDTO{}
+	err = request.DecodeJSON(w, r, &updateTodoDTO)
 	if err != nil {
 		app.badRequest(w, r, err)
 		return
 	}
+	updateTodoParams := dto.NewUpdateTodoParams(&updateTodoDTO)
 	updateTodoParams.ID = int(id)
-	_, err = app.q.UpdateTodo(*app.ctx, updateTodoParams)
+	_, err = app.q.UpdateTodo(*app.ctx, *updateTodoParams)
 	if err != nil {
 		app.serverError(w, r, err)
 		return
