@@ -147,24 +147,19 @@ func (q *Queries) GetTodoTagsByIDs(ctx context.Context, ids []int) ([]TodoTag, e
 const UpdateTodoTag = `-- name: UpdateTodoTag :execresult
 UPDATE ` + "`" + `todo_tag` + "`" + `
 SET 
-  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
-  
   ` + "`" + `name` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `name` + "`" + ` END,
   ` + "`" + `todo_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `todo_id` + "`" + ` END
 WHERE id = ?
 `
 
 type UpdateTodoTagParams struct {
-	CreatedAt time.Time `db:"created_at" json:"created_at"`
-	Name      string    `db:"name" json:"name"`
-	TodoID    int       `db:"todo_id" json:"todo_id"`
-	ID        int       `db:"id" json:"id"`
+	Name   string `db:"name" json:"name"`
+	TodoID int    `db:"todo_id" json:"todo_id"`
+	ID     int    `db:"id" json:"id"`
 }
 
 func (q *Queries) UpdateTodoTag(ctx context.Context, arg UpdateTodoTagParams) (sql.Result, error) {
 	return q.exec(ctx, q.updateTodoTagStmt, UpdateTodoTag,
-		arg.CreatedAt,
-		arg.CreatedAt,
 		arg.Name,
 		arg.Name,
 		arg.TodoID,

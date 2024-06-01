@@ -13,7 +13,8 @@ import (
 )
 
 const CountTodos = `-- name: CountTodos :one
-SELECT count(*) FROM ` + "`" + `todo` + "`" + `
+SELECT count(*)
+FROM ` + "`" + `todo` + "`" + `
 `
 
 func (q *Queries) CountTodos(ctx context.Context) (int64, error) {
@@ -24,11 +25,9 @@ func (q *Queries) CountTodos(ctx context.Context) (int64, error) {
 }
 
 const CreateTodo = `-- name: CreateTodo :execresult
-INSERT INTO ` + "`" + `todo` + "`" + ` (
-` + "`" + `amount` + "`" + `,` + "`" + `category_id` + "`" + `,` + "`" + `content` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `deadline` + "`" + `,` + "`" + `priority` + "`" + `,` + "`" + `score` + "`" + `,` + "`" + `status` + "`" + `,` + "`" + `title` + "`" + `,` + "`" + `updated_at` + "`" + `
-) VALUES (
-? ,? ,? ,? ,? ,? ,? ,? ,? ,? 
-)
+INSERT INTO ` + "`" + `todo` + "`" + ` (` + "`" + `amount` + "`" + `, ` + "`" + `category_id` + "`" + `, ` + "`" + `content` + "`" + `, ` + "`" + `created_at` + "`" + `, ` + "`" + `deadline` + "`" + `, ` + "`" + `priority` + "`" + `, ` + "`" + `score` + "`" + `, ` + "`" + `status` + "`" + `,
+                    ` + "`" + `title` + "`" + `, ` + "`" + `updated_at` + "`" + `)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateTodoParams struct {
@@ -60,7 +59,8 @@ func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (sql.Res
 }
 
 const DeleteTodo = `-- name: DeleteTodo :exec
-DELETE FROM ` + "`" + `todo` + "`" + `
+DELETE
+FROM ` + "`" + `todo` + "`" + `
 WHERE id = ?
 `
 
@@ -70,8 +70,10 @@ func (q *Queries) DeleteTodo(ctx context.Context, id int) error {
 }
 
 const GetTodo = `-- name: GetTodo :one
-SELECT id, title, score, amount, status, created_at, updated_at, deadline, priority, content, category_id FROM ` + "`" + `todo` + "`" + `
-WHERE id = ? LIMIT 1
+SELECT id, title, score, amount, status, created_at, updated_at, deadline, priority, content, category_id
+FROM ` + "`" + `todo` + "`" + `
+WHERE id = ?
+LIMIT 1
 `
 
 func (q *Queries) GetTodo(ctx context.Context, id int) (Todo, error) {
@@ -94,7 +96,8 @@ func (q *Queries) GetTodo(ctx context.Context, id int) (Todo, error) {
 }
 
 const GetTodos = `-- name: GetTodos :many
-SELECT id, title, score, amount, status, created_at, updated_at, deadline, priority, content, category_id FROM ` + "`" + `todo` + "`" + `
+SELECT id, title, score, amount, status, created_at, updated_at, deadline, priority, content, category_id
+FROM ` + "`" + `todo` + "`" + `
 `
 
 func (q *Queries) GetTodos(ctx context.Context) ([]Todo, error) {
@@ -185,17 +188,15 @@ func (q *Queries) GetTodosByIDs(ctx context.Context, ids []int) ([]Todo, error) 
 
 const UpdateTodo = `-- name: UpdateTodo :execresult
 UPDATE ` + "`" + `todo` + "`" + `
-SET 
-  ` + "`" + `amount` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `amount` + "`" + ` END,
-  ` + "`" + `category_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `category_id` + "`" + ` END,
-  ` + "`" + `content` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `content` + "`" + ` END,
-  ` + "`" + `deadline` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `deadline` + "`" + ` END,
-  
-  ` + "`" + `priority` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `priority` + "`" + ` END,
-  ` + "`" + `score` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `score` + "`" + ` END,
-  ` + "`" + `status` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `status` + "`" + ` END,
-  ` + "`" + `title` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `title` + "`" + ` END,
-  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
+SET ` + "`" + `amount` + "`" + `      = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `amount` + "`" + ` END,
+    ` + "`" + `category_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `category_id` + "`" + ` END,
+    ` + "`" + `content` + "`" + `     = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `content` + "`" + ` END,
+    ` + "`" + `deadline` + "`" + `    = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `deadline` + "`" + ` END,
+    ` + "`" + `priority` + "`" + `    = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `priority` + "`" + ` END,
+    ` + "`" + `score` + "`" + `       = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `score` + "`" + ` END,
+    ` + "`" + `status` + "`" + `      = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `status` + "`" + ` END,
+    ` + "`" + `title` + "`" + `       = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `title` + "`" + ` END,
+    ` + "`" + `updated_at` + "`" + `  = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
 WHERE id = ?
 `
 

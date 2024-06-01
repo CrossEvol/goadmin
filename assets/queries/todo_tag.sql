@@ -24,8 +24,6 @@ INSERT INTO `todo_tag` (
 -- name: UpdateTodoTag :execresult
 UPDATE `todo_tag`
 SET 
-  `created_at` = CASE WHEN sqlc.arg('created_at') IS NOT NULL THEN sqlc.arg('created_at') ELSE `created_at` END,
-  
   `name` = CASE WHEN sqlc.arg('name') IS NOT NULL THEN sqlc.arg('name') ELSE `name` END,
   `todo_id` = CASE WHEN sqlc.arg('todo_id') IS NOT NULL THEN sqlc.arg('todo_id') ELSE `todo_id` END
 WHERE id = ?;
