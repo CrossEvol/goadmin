@@ -27,6 +27,11 @@ func (app *application) GetTodo(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) GetTodoList(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
+	hasIds := query.Has("id")
+	if hasIds {
+		app.GetTodoByIDs(w, r)
+		return
+	}
 	app.logger.Info(utils.ToJson(query))
 	todos, err := app.q.GetTodos(*app.ctx)
 	if err != nil {
@@ -83,23 +88,25 @@ func (app *application) CreateTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) UpdateTodo(w http.ResponseWriter, r *http.Request) {
-	updateTodoParams := mysqlDao.UpdateTodoParams{}
-	err := request.DecodeJSON(w, r, &updateTodoParams)
+	IdStr := r.PathValue("id")
+	id, err := strconv.ParseInt(IdStr, 10, 32)
 	if err != nil {
 		app.badRequest(w, r, err)
 		return
 	}
-	result, err := app.q.UpdateTodo(*app.ctx, updateTodoParams)
+	updateTodoParams := mysqlDao.UpdateTodoParams{}
+	err = request.DecodeJSON(w, r, &updateTodoParams)
+	if err != nil {
+		app.badRequest(w, r, err)
+		return
+	}
+	updateTodoParams.ID = int(id)
+	_, err = app.q.UpdateTodo(*app.ctx, updateTodoParams)
 	if err != nil {
 		app.serverError(w, r, err)
 		return
 	}
-	lastInsertId, err := result.LastInsertId()
-	if err != nil {
-		app.serverError(w, r, err)
-		return
-	}
-	todo, err := app.q.GetTodo(*app.ctx, int(lastInsertId))
+	todo, err := app.q.GetTodo(*app.ctx, updateTodoParams.ID)
 	if err != nil {
 		app.serverError(w, r, err)
 		return

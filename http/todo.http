@@ -1,0 +1,53 @@
+DELETE {{url}}/todo/11
+Accept: application/json
+
+###
+PATCH {{url}}/todo/11
+Content-Type: application/json
+
+{
+  "amount": 10.5,
+  "category_id": null,
+  "content": "This is a todo item",
+  "createdat": "2024-06-01T16:50:00.4348255+08:00",
+  "deadline": "2024-06-01T16:50:00.4348255+08:00",
+  "priority": "HIGH",
+  "score": 75,
+  "status": "PENDING",
+  "title": "Important Task",
+  "updatedat": "2024-06-01T16:50:00.4348255+08:00"
+}
+
+###
+POST {{url}}/todo
+Content-Type: application/json
+
+{
+  "amount": 10.5,
+  "category_id": null,
+  "content": "This is a todo item",
+  "createdat": "2024-06-01T16:00:00Z",
+  "deadline": "2024-06-01T16:00:00Z",
+  "priority": "HIGH",
+  "score": 75,
+  "status": "PENDING",
+  "title": "Important Task",
+  "updatedat": "2024-06-01T16:50:00.4348255+08:00"
+}
+
+
+###
+GET {{url}}/todo?id=1,2,3
+Accept: application/json
+
+###
+
+GET {{url}}/todo
+Accept: application/json
+
+###
+
+GET {{url}}/todo/1
+Accept: application/json
+
+###

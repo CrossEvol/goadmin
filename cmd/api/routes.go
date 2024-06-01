@@ -20,6 +20,14 @@ func (app *application) routes() http.Handler {
 	mux.Post("/users", app.createUser)
 	mux.Post("/authentication-tokens", app.createAuthenticationToken)
 
+	mux.Route("/todo", func(r chi.Router) {
+		r.Get("/{id}", app.GetTodo)
+		r.Get("/", app.GetTodoList)
+		r.Post("/", app.CreateTodo)
+		r.Patch("/{id}", app.UpdateTodo)
+		r.Delete("/{id}", app.DeleteTodo)
+	})
+
 	mux.Group(func(mux chi.Router) {
 		mux.Use(app.requireAuthenticatedUser)
 
