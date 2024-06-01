@@ -6,8 +6,103 @@ package mysqlDao
 
 import (
 	"database/sql"
+	"database/sql/driver"
+	"fmt"
 	"time"
 )
+
+type TodoPriority string
+
+const (
+	TodoPriorityHIGH   TodoPriority = "HIGH"
+	TodoPriorityMEDIUM TodoPriority = "MEDIUM"
+	TodoPriorityLOW    TodoPriority = "LOW"
+)
+
+func (e *TodoPriority) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = TodoPriority(s)
+	case string:
+		*e = TodoPriority(s)
+	default:
+		return fmt.Errorf("unsupported scan type for TodoPriority: %T", src)
+	}
+	return nil
+}
+
+type NullTodoPriority struct {
+	TodoPriority TodoPriority `json:"todo_priority"`
+	Valid        bool         `json:"valid"` // Valid is true if TodoPriority is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullTodoPriority) Scan(value interface{}) error {
+	if value == nil {
+		ns.TodoPriority, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.TodoPriority.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullTodoPriority) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.TodoPriority), nil
+}
+
+type TodoStatus string
+
+const (
+	TodoStatusPENDING    TodoStatus = "PENDING"
+	TodoStatusPAUSED     TodoStatus = "PAUSED"
+	TodoStatusCOMPLETED  TodoStatus = "COMPLETED"
+	TodoStatusPROCESSING TodoStatus = "PROCESSING"
+)
+
+func (e *TodoStatus) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = TodoStatus(s)
+	case string:
+		*e = TodoStatus(s)
+	default:
+		return fmt.Errorf("unsupported scan type for TodoStatus: %T", src)
+	}
+	return nil
+}
+
+type NullTodoStatus struct {
+	TodoStatus TodoStatus `json:"todo_status"`
+	Valid      bool       `json:"valid"` // Valid is true if TodoStatus is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullTodoStatus) Scan(value interface{}) error {
+	if value == nil {
+		ns.TodoStatus, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.TodoStatus.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullTodoStatus) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.TodoStatus), nil
+}
+
+type Category struct {
+	ID       int           `db:"id" json:"id"`
+	Name     string        `db:"name" json:"name"`
+	ParentID sql.NullInt32 `db:"parent_id" json:"parent_id"`
+}
 
 type GoadminMenu struct {
 	ID         uint32         `db:"id" json:"id"`
@@ -109,4 +204,44 @@ type GoadminUserPermission struct {
 	PermissionID uint32    `db:"permission_id" json:"permission_id"`
 	CreatedAt    time.Time `db:"created_at" json:"created_at"`
 	UpdatedAt    time.Time `db:"updated_at" json:"updated_at"`
+}
+
+type Group struct {
+	ID   int    `db:"id" json:"id"`
+	Name string `db:"name" json:"name"`
+	Desc string `db:"desc" json:"desc"`
+}
+
+type Todo struct {
+	ID         int           `db:"id" json:"id"`
+	Title      string        `db:"title" json:"title"`
+	Score      int           `db:"score" json:"score"`
+	Amount     float64       `db:"amount" json:"amount"`
+	Status     TodoStatus    `db:"status" json:"status"`
+	Createdat  time.Time     `db:"createdat" json:"createdat"`
+	Updatedat  time.Time     `db:"updatedat" json:"updatedat"`
+	Deadline   time.Time     `db:"deadline" json:"deadline"`
+	Priority   TodoPriority  `db:"priority" json:"priority"`
+	Content    string        `db:"content" json:"content"`
+	CategoryID sql.NullInt32 `db:"category_id" json:"category_id"`
+}
+
+type TodoDetail struct {
+	ID     int    `db:"id" json:"id"`
+	Desc   string `db:"desc" json:"desc"`
+	ImgUrl string `db:"img_url" json:"img_url"`
+	TodoID int    `db:"todo_id" json:"todo_id"`
+}
+
+type TodoTag struct {
+	ID        int       `db:"id" json:"id"`
+	Name      string    `db:"name" json:"name"`
+	TodoID    int       `db:"todo_id" json:"todo_id"`
+	Createdat time.Time `db:"createdat" json:"createdat"`
+}
+
+type Todosongroup struct {
+	TodoID     int       `db:"todo_id" json:"todo_id"`
+	GroupID    int       `db:"group_id" json:"group_id"`
+	Assignedat time.Time `db:"assignedat" json:"assignedat"`
 }

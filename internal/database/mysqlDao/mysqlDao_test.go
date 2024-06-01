@@ -69,6 +69,7 @@ func (suite *MySQLDaoTestSuite) TestMySQLDao() {
 	assert.Equal(suite.T(), 5, suite.VariableThatShouldStartAtFive)
 	ctx := context.Background()
 
+	// admin tables
 	_, err := suite.queries.GetGoadminMenus(ctx)
 	require.Nil(suite.T(), err)
 	_, err = suite.queries.GetGoadminOperationLogs(ctx)
@@ -90,6 +91,20 @@ func (suite *MySQLDaoTestSuite) TestMySQLDao() {
 	_, err = suite.queries.CountGoadminUserPermissions(ctx)
 	require.Nil(suite.T(), err)
 	_, err = suite.queries.GetGoadminUsers(ctx)
+	require.Nil(suite.T(), err)
+
+	// todo tables
+	_, err = suite.queries.GetTodos(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetTodoDetails(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetGroups(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetCategories(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetTodoTags(ctx)
+	require.Nil(suite.T(), err)
+	_, err = suite.queries.GetTodosongroups(ctx)
 	require.Nil(suite.T(), err)
 }
 

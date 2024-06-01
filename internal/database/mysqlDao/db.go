@@ -24,6 +24,9 @@ func New(db DBTX) *Queries {
 func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	q := Queries{db: db}
 	var err error
+	if q.countCategoriesStmt, err = db.PrepareContext(ctx, CountCategories); err != nil {
+		return nil, fmt.Errorf("error preparing query CountCategories: %w", err)
+	}
 	if q.countGoadminMenusStmt, err = db.PrepareContext(ctx, CountGoadminMenus); err != nil {
 		return nil, fmt.Errorf("error preparing query CountGoadminMenus: %w", err)
 	}
@@ -56,6 +59,24 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	}
 	if q.countGoadminUsersStmt, err = db.PrepareContext(ctx, CountGoadminUsers); err != nil {
 		return nil, fmt.Errorf("error preparing query CountGoadminUsers: %w", err)
+	}
+	if q.countGroupsStmt, err = db.PrepareContext(ctx, CountGroups); err != nil {
+		return nil, fmt.Errorf("error preparing query CountGroups: %w", err)
+	}
+	if q.countTodoDetailsStmt, err = db.PrepareContext(ctx, CountTodoDetails); err != nil {
+		return nil, fmt.Errorf("error preparing query CountTodoDetails: %w", err)
+	}
+	if q.countTodoTagsStmt, err = db.PrepareContext(ctx, CountTodoTags); err != nil {
+		return nil, fmt.Errorf("error preparing query CountTodoTags: %w", err)
+	}
+	if q.countTodosStmt, err = db.PrepareContext(ctx, CountTodos); err != nil {
+		return nil, fmt.Errorf("error preparing query CountTodos: %w", err)
+	}
+	if q.countTodosongroupsStmt, err = db.PrepareContext(ctx, CountTodosongroups); err != nil {
+		return nil, fmt.Errorf("error preparing query CountTodosongroups: %w", err)
+	}
+	if q.createCategoryStmt, err = db.PrepareContext(ctx, CreateCategory); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateCategory: %w", err)
 	}
 	if q.createGoadminMenuStmt, err = db.PrepareContext(ctx, CreateGoadminMenu); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateGoadminMenu: %w", err)
@@ -90,6 +111,24 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.createGoadminUserPermissionStmt, err = db.PrepareContext(ctx, CreateGoadminUserPermission); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateGoadminUserPermission: %w", err)
 	}
+	if q.createGroupStmt, err = db.PrepareContext(ctx, CreateGroup); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateGroup: %w", err)
+	}
+	if q.createTodoStmt, err = db.PrepareContext(ctx, CreateTodo); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateTodo: %w", err)
+	}
+	if q.createTodoDetailStmt, err = db.PrepareContext(ctx, CreateTodoDetail); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateTodoDetail: %w", err)
+	}
+	if q.createTodoTagStmt, err = db.PrepareContext(ctx, CreateTodoTag); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateTodoTag: %w", err)
+	}
+	if q.createTodosongroupStmt, err = db.PrepareContext(ctx, CreateTodosongroup); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateTodosongroup: %w", err)
+	}
+	if q.deleteCategoryStmt, err = db.PrepareContext(ctx, DeleteCategory); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteCategory: %w", err)
+	}
 	if q.deleteGoadminMenuStmt, err = db.PrepareContext(ctx, DeleteGoadminMenu); err != nil {
 		return nil, fmt.Errorf("error preparing query DeleteGoadminMenu: %w", err)
 	}
@@ -122,6 +161,30 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	}
 	if q.deleteGoadminUserPermissionStmt, err = db.PrepareContext(ctx, DeleteGoadminUserPermission); err != nil {
 		return nil, fmt.Errorf("error preparing query DeleteGoadminUserPermission: %w", err)
+	}
+	if q.deleteGroupStmt, err = db.PrepareContext(ctx, DeleteGroup); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteGroup: %w", err)
+	}
+	if q.deleteTodoStmt, err = db.PrepareContext(ctx, DeleteTodo); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteTodo: %w", err)
+	}
+	if q.deleteTodoDetailStmt, err = db.PrepareContext(ctx, DeleteTodoDetail); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteTodoDetail: %w", err)
+	}
+	if q.deleteTodoTagStmt, err = db.PrepareContext(ctx, DeleteTodoTag); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteTodoTag: %w", err)
+	}
+	if q.deleteTodosongroupStmt, err = db.PrepareContext(ctx, DeleteTodosongroup); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteTodosongroup: %w", err)
+	}
+	if q.getCategoriesStmt, err = db.PrepareContext(ctx, GetCategories); err != nil {
+		return nil, fmt.Errorf("error preparing query GetCategories: %w", err)
+	}
+	if q.getCategoriesByIDsStmt, err = db.PrepareContext(ctx, GetCategoriesByIDs); err != nil {
+		return nil, fmt.Errorf("error preparing query GetCategoriesByIDs: %w", err)
+	}
+	if q.getCategoryStmt, err = db.PrepareContext(ctx, GetCategory); err != nil {
+		return nil, fmt.Errorf("error preparing query GetCategory: %w", err)
 	}
 	if q.getGoadminMenuStmt, err = db.PrepareContext(ctx, GetGoadminMenu); err != nil {
 		return nil, fmt.Errorf("error preparing query GetGoadminMenu: %w", err)
@@ -192,6 +255,51 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.getGoadminUsersStmt, err = db.PrepareContext(ctx, GetGoadminUsers); err != nil {
 		return nil, fmt.Errorf("error preparing query GetGoadminUsers: %w", err)
 	}
+	if q.getGroupStmt, err = db.PrepareContext(ctx, GetGroup); err != nil {
+		return nil, fmt.Errorf("error preparing query GetGroup: %w", err)
+	}
+	if q.getGroupsStmt, err = db.PrepareContext(ctx, GetGroups); err != nil {
+		return nil, fmt.Errorf("error preparing query GetGroups: %w", err)
+	}
+	if q.getGroupsByIDsStmt, err = db.PrepareContext(ctx, GetGroupsByIDs); err != nil {
+		return nil, fmt.Errorf("error preparing query GetGroupsByIDs: %w", err)
+	}
+	if q.getTodoStmt, err = db.PrepareContext(ctx, GetTodo); err != nil {
+		return nil, fmt.Errorf("error preparing query GetTodo: %w", err)
+	}
+	if q.getTodoDetailStmt, err = db.PrepareContext(ctx, GetTodoDetail); err != nil {
+		return nil, fmt.Errorf("error preparing query GetTodoDetail: %w", err)
+	}
+	if q.getTodoDetailsStmt, err = db.PrepareContext(ctx, GetTodoDetails); err != nil {
+		return nil, fmt.Errorf("error preparing query GetTodoDetails: %w", err)
+	}
+	if q.getTodoDetailsByIDsStmt, err = db.PrepareContext(ctx, GetTodoDetailsByIDs); err != nil {
+		return nil, fmt.Errorf("error preparing query GetTodoDetailsByIDs: %w", err)
+	}
+	if q.getTodoTagStmt, err = db.PrepareContext(ctx, GetTodoTag); err != nil {
+		return nil, fmt.Errorf("error preparing query GetTodoTag: %w", err)
+	}
+	if q.getTodoTagsStmt, err = db.PrepareContext(ctx, GetTodoTags); err != nil {
+		return nil, fmt.Errorf("error preparing query GetTodoTags: %w", err)
+	}
+	if q.getTodoTagsByIDsStmt, err = db.PrepareContext(ctx, GetTodoTagsByIDs); err != nil {
+		return nil, fmt.Errorf("error preparing query GetTodoTagsByIDs: %w", err)
+	}
+	if q.getTodosStmt, err = db.PrepareContext(ctx, GetTodos); err != nil {
+		return nil, fmt.Errorf("error preparing query GetTodos: %w", err)
+	}
+	if q.getTodosByIDsStmt, err = db.PrepareContext(ctx, GetTodosByIDs); err != nil {
+		return nil, fmt.Errorf("error preparing query GetTodosByIDs: %w", err)
+	}
+	if q.getTodosongroupStmt, err = db.PrepareContext(ctx, GetTodosongroup); err != nil {
+		return nil, fmt.Errorf("error preparing query GetTodosongroup: %w", err)
+	}
+	if q.getTodosongroupsStmt, err = db.PrepareContext(ctx, GetTodosongroups); err != nil {
+		return nil, fmt.Errorf("error preparing query GetTodosongroups: %w", err)
+	}
+	if q.updateCategoryStmt, err = db.PrepareContext(ctx, UpdateCategory); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateCategory: %w", err)
+	}
 	if q.updateGoadminMenuStmt, err = db.PrepareContext(ctx, UpdateGoadminMenu); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateGoadminMenu: %w", err)
 	}
@@ -225,11 +333,31 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.updateGoadminUserPermissionStmt, err = db.PrepareContext(ctx, UpdateGoadminUserPermission); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateGoadminUserPermission: %w", err)
 	}
+	if q.updateGroupStmt, err = db.PrepareContext(ctx, UpdateGroup); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateGroup: %w", err)
+	}
+	if q.updateTodoStmt, err = db.PrepareContext(ctx, UpdateTodo); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateTodo: %w", err)
+	}
+	if q.updateTodoDetailStmt, err = db.PrepareContext(ctx, UpdateTodoDetail); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateTodoDetail: %w", err)
+	}
+	if q.updateTodoTagStmt, err = db.PrepareContext(ctx, UpdateTodoTag); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateTodoTag: %w", err)
+	}
+	if q.updateTodosongroupStmt, err = db.PrepareContext(ctx, UpdateTodosongroup); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateTodosongroup: %w", err)
+	}
 	return &q, nil
 }
 
 func (q *Queries) Close() error {
 	var err error
+	if q.countCategoriesStmt != nil {
+		if cerr := q.countCategoriesStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing countCategoriesStmt: %w", cerr)
+		}
+	}
 	if q.countGoadminMenusStmt != nil {
 		if cerr := q.countGoadminMenusStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing countGoadminMenusStmt: %w", cerr)
@@ -283,6 +411,36 @@ func (q *Queries) Close() error {
 	if q.countGoadminUsersStmt != nil {
 		if cerr := q.countGoadminUsersStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing countGoadminUsersStmt: %w", cerr)
+		}
+	}
+	if q.countGroupsStmt != nil {
+		if cerr := q.countGroupsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing countGroupsStmt: %w", cerr)
+		}
+	}
+	if q.countTodoDetailsStmt != nil {
+		if cerr := q.countTodoDetailsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing countTodoDetailsStmt: %w", cerr)
+		}
+	}
+	if q.countTodoTagsStmt != nil {
+		if cerr := q.countTodoTagsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing countTodoTagsStmt: %w", cerr)
+		}
+	}
+	if q.countTodosStmt != nil {
+		if cerr := q.countTodosStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing countTodosStmt: %w", cerr)
+		}
+	}
+	if q.countTodosongroupsStmt != nil {
+		if cerr := q.countTodosongroupsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing countTodosongroupsStmt: %w", cerr)
+		}
+	}
+	if q.createCategoryStmt != nil {
+		if cerr := q.createCategoryStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createCategoryStmt: %w", cerr)
 		}
 	}
 	if q.createGoadminMenuStmt != nil {
@@ -340,6 +498,36 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing createGoadminUserPermissionStmt: %w", cerr)
 		}
 	}
+	if q.createGroupStmt != nil {
+		if cerr := q.createGroupStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createGroupStmt: %w", cerr)
+		}
+	}
+	if q.createTodoStmt != nil {
+		if cerr := q.createTodoStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createTodoStmt: %w", cerr)
+		}
+	}
+	if q.createTodoDetailStmt != nil {
+		if cerr := q.createTodoDetailStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createTodoDetailStmt: %w", cerr)
+		}
+	}
+	if q.createTodoTagStmt != nil {
+		if cerr := q.createTodoTagStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createTodoTagStmt: %w", cerr)
+		}
+	}
+	if q.createTodosongroupStmt != nil {
+		if cerr := q.createTodosongroupStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createTodosongroupStmt: %w", cerr)
+		}
+	}
+	if q.deleteCategoryStmt != nil {
+		if cerr := q.deleteCategoryStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteCategoryStmt: %w", cerr)
+		}
+	}
 	if q.deleteGoadminMenuStmt != nil {
 		if cerr := q.deleteGoadminMenuStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing deleteGoadminMenuStmt: %w", cerr)
@@ -393,6 +581,46 @@ func (q *Queries) Close() error {
 	if q.deleteGoadminUserPermissionStmt != nil {
 		if cerr := q.deleteGoadminUserPermissionStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing deleteGoadminUserPermissionStmt: %w", cerr)
+		}
+	}
+	if q.deleteGroupStmt != nil {
+		if cerr := q.deleteGroupStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteGroupStmt: %w", cerr)
+		}
+	}
+	if q.deleteTodoStmt != nil {
+		if cerr := q.deleteTodoStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteTodoStmt: %w", cerr)
+		}
+	}
+	if q.deleteTodoDetailStmt != nil {
+		if cerr := q.deleteTodoDetailStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteTodoDetailStmt: %w", cerr)
+		}
+	}
+	if q.deleteTodoTagStmt != nil {
+		if cerr := q.deleteTodoTagStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteTodoTagStmt: %w", cerr)
+		}
+	}
+	if q.deleteTodosongroupStmt != nil {
+		if cerr := q.deleteTodosongroupStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteTodosongroupStmt: %w", cerr)
+		}
+	}
+	if q.getCategoriesStmt != nil {
+		if cerr := q.getCategoriesStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getCategoriesStmt: %w", cerr)
+		}
+	}
+	if q.getCategoriesByIDsStmt != nil {
+		if cerr := q.getCategoriesByIDsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getCategoriesByIDsStmt: %w", cerr)
+		}
+	}
+	if q.getCategoryStmt != nil {
+		if cerr := q.getCategoryStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getCategoryStmt: %w", cerr)
 		}
 	}
 	if q.getGoadminMenuStmt != nil {
@@ -510,6 +738,81 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing getGoadminUsersStmt: %w", cerr)
 		}
 	}
+	if q.getGroupStmt != nil {
+		if cerr := q.getGroupStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getGroupStmt: %w", cerr)
+		}
+	}
+	if q.getGroupsStmt != nil {
+		if cerr := q.getGroupsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getGroupsStmt: %w", cerr)
+		}
+	}
+	if q.getGroupsByIDsStmt != nil {
+		if cerr := q.getGroupsByIDsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getGroupsByIDsStmt: %w", cerr)
+		}
+	}
+	if q.getTodoStmt != nil {
+		if cerr := q.getTodoStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getTodoStmt: %w", cerr)
+		}
+	}
+	if q.getTodoDetailStmt != nil {
+		if cerr := q.getTodoDetailStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getTodoDetailStmt: %w", cerr)
+		}
+	}
+	if q.getTodoDetailsStmt != nil {
+		if cerr := q.getTodoDetailsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getTodoDetailsStmt: %w", cerr)
+		}
+	}
+	if q.getTodoDetailsByIDsStmt != nil {
+		if cerr := q.getTodoDetailsByIDsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getTodoDetailsByIDsStmt: %w", cerr)
+		}
+	}
+	if q.getTodoTagStmt != nil {
+		if cerr := q.getTodoTagStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getTodoTagStmt: %w", cerr)
+		}
+	}
+	if q.getTodoTagsStmt != nil {
+		if cerr := q.getTodoTagsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getTodoTagsStmt: %w", cerr)
+		}
+	}
+	if q.getTodoTagsByIDsStmt != nil {
+		if cerr := q.getTodoTagsByIDsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getTodoTagsByIDsStmt: %w", cerr)
+		}
+	}
+	if q.getTodosStmt != nil {
+		if cerr := q.getTodosStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getTodosStmt: %w", cerr)
+		}
+	}
+	if q.getTodosByIDsStmt != nil {
+		if cerr := q.getTodosByIDsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getTodosByIDsStmt: %w", cerr)
+		}
+	}
+	if q.getTodosongroupStmt != nil {
+		if cerr := q.getTodosongroupStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getTodosongroupStmt: %w", cerr)
+		}
+	}
+	if q.getTodosongroupsStmt != nil {
+		if cerr := q.getTodosongroupsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getTodosongroupsStmt: %w", cerr)
+		}
+	}
+	if q.updateCategoryStmt != nil {
+		if cerr := q.updateCategoryStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateCategoryStmt: %w", cerr)
+		}
+	}
 	if q.updateGoadminMenuStmt != nil {
 		if cerr := q.updateGoadminMenuStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing updateGoadminMenuStmt: %w", cerr)
@@ -565,6 +868,31 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing updateGoadminUserPermissionStmt: %w", cerr)
 		}
 	}
+	if q.updateGroupStmt != nil {
+		if cerr := q.updateGroupStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateGroupStmt: %w", cerr)
+		}
+	}
+	if q.updateTodoStmt != nil {
+		if cerr := q.updateTodoStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateTodoStmt: %w", cerr)
+		}
+	}
+	if q.updateTodoDetailStmt != nil {
+		if cerr := q.updateTodoDetailStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateTodoDetailStmt: %w", cerr)
+		}
+	}
+	if q.updateTodoTagStmt != nil {
+		if cerr := q.updateTodoTagStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateTodoTagStmt: %w", cerr)
+		}
+	}
+	if q.updateTodosongroupStmt != nil {
+		if cerr := q.updateTodosongroupStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateTodosongroupStmt: %w", cerr)
+		}
+	}
 	return err
 }
 
@@ -604,6 +932,7 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 type Queries struct {
 	db                              DBTX
 	tx                              *sql.Tx
+	countCategoriesStmt             *sql.Stmt
 	countGoadminMenusStmt           *sql.Stmt
 	countGoadminOperationLogsStmt   *sql.Stmt
 	countGoadminPermissionsStmt     *sql.Stmt
@@ -615,6 +944,12 @@ type Queries struct {
 	countGoadminSitesStmt           *sql.Stmt
 	countGoadminUserPermissionsStmt *sql.Stmt
 	countGoadminUsersStmt           *sql.Stmt
+	countGroupsStmt                 *sql.Stmt
+	countTodoDetailsStmt            *sql.Stmt
+	countTodoTagsStmt               *sql.Stmt
+	countTodosStmt                  *sql.Stmt
+	countTodosongroupsStmt          *sql.Stmt
+	createCategoryStmt              *sql.Stmt
 	createGoadminMenuStmt           *sql.Stmt
 	createGoadminOperationLogStmt   *sql.Stmt
 	createGoadminPermissionStmt     *sql.Stmt
@@ -626,6 +961,12 @@ type Queries struct {
 	createGoadminSiteStmt           *sql.Stmt
 	createGoadminUserStmt           *sql.Stmt
 	createGoadminUserPermissionStmt *sql.Stmt
+	createGroupStmt                 *sql.Stmt
+	createTodoStmt                  *sql.Stmt
+	createTodoDetailStmt            *sql.Stmt
+	createTodoTagStmt               *sql.Stmt
+	createTodosongroupStmt          *sql.Stmt
+	deleteCategoryStmt              *sql.Stmt
 	deleteGoadminMenuStmt           *sql.Stmt
 	deleteGoadminOperationLogStmt   *sql.Stmt
 	deleteGoadminPermissionStmt     *sql.Stmt
@@ -637,6 +978,14 @@ type Queries struct {
 	deleteGoadminSiteStmt           *sql.Stmt
 	deleteGoadminUserStmt           *sql.Stmt
 	deleteGoadminUserPermissionStmt *sql.Stmt
+	deleteGroupStmt                 *sql.Stmt
+	deleteTodoStmt                  *sql.Stmt
+	deleteTodoDetailStmt            *sql.Stmt
+	deleteTodoTagStmt               *sql.Stmt
+	deleteTodosongroupStmt          *sql.Stmt
+	getCategoriesStmt               *sql.Stmt
+	getCategoriesByIDsStmt          *sql.Stmt
+	getCategoryStmt                 *sql.Stmt
 	getGoadminMenuStmt              *sql.Stmt
 	getGoadminMenusStmt             *sql.Stmt
 	getGoadminOperationLogStmt      *sql.Stmt
@@ -660,6 +1009,21 @@ type Queries struct {
 	getGoadminUserPermissionStmt    *sql.Stmt
 	getGoadminUserPermissionsStmt   *sql.Stmt
 	getGoadminUsersStmt             *sql.Stmt
+	getGroupStmt                    *sql.Stmt
+	getGroupsStmt                   *sql.Stmt
+	getGroupsByIDsStmt              *sql.Stmt
+	getTodoStmt                     *sql.Stmt
+	getTodoDetailStmt               *sql.Stmt
+	getTodoDetailsStmt              *sql.Stmt
+	getTodoDetailsByIDsStmt         *sql.Stmt
+	getTodoTagStmt                  *sql.Stmt
+	getTodoTagsStmt                 *sql.Stmt
+	getTodoTagsByIDsStmt            *sql.Stmt
+	getTodosStmt                    *sql.Stmt
+	getTodosByIDsStmt               *sql.Stmt
+	getTodosongroupStmt             *sql.Stmt
+	getTodosongroupsStmt            *sql.Stmt
+	updateCategoryStmt              *sql.Stmt
 	updateGoadminMenuStmt           *sql.Stmt
 	updateGoadminOperationLogStmt   *sql.Stmt
 	updateGoadminPermissionStmt     *sql.Stmt
@@ -671,12 +1035,18 @@ type Queries struct {
 	updateGoadminSiteStmt           *sql.Stmt
 	updateGoadminUserStmt           *sql.Stmt
 	updateGoadminUserPermissionStmt *sql.Stmt
+	updateGroupStmt                 *sql.Stmt
+	updateTodoStmt                  *sql.Stmt
+	updateTodoDetailStmt            *sql.Stmt
+	updateTodoTagStmt               *sql.Stmt
+	updateTodosongroupStmt          *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
 		db:                              tx,
 		tx:                              tx,
+		countCategoriesStmt:             q.countCategoriesStmt,
 		countGoadminMenusStmt:           q.countGoadminMenusStmt,
 		countGoadminOperationLogsStmt:   q.countGoadminOperationLogsStmt,
 		countGoadminPermissionsStmt:     q.countGoadminPermissionsStmt,
@@ -688,6 +1058,12 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		countGoadminSitesStmt:           q.countGoadminSitesStmt,
 		countGoadminUserPermissionsStmt: q.countGoadminUserPermissionsStmt,
 		countGoadminUsersStmt:           q.countGoadminUsersStmt,
+		countGroupsStmt:                 q.countGroupsStmt,
+		countTodoDetailsStmt:            q.countTodoDetailsStmt,
+		countTodoTagsStmt:               q.countTodoTagsStmt,
+		countTodosStmt:                  q.countTodosStmt,
+		countTodosongroupsStmt:          q.countTodosongroupsStmt,
+		createCategoryStmt:              q.createCategoryStmt,
 		createGoadminMenuStmt:           q.createGoadminMenuStmt,
 		createGoadminOperationLogStmt:   q.createGoadminOperationLogStmt,
 		createGoadminPermissionStmt:     q.createGoadminPermissionStmt,
@@ -699,6 +1075,12 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		createGoadminSiteStmt:           q.createGoadminSiteStmt,
 		createGoadminUserStmt:           q.createGoadminUserStmt,
 		createGoadminUserPermissionStmt: q.createGoadminUserPermissionStmt,
+		createGroupStmt:                 q.createGroupStmt,
+		createTodoStmt:                  q.createTodoStmt,
+		createTodoDetailStmt:            q.createTodoDetailStmt,
+		createTodoTagStmt:               q.createTodoTagStmt,
+		createTodosongroupStmt:          q.createTodosongroupStmt,
+		deleteCategoryStmt:              q.deleteCategoryStmt,
 		deleteGoadminMenuStmt:           q.deleteGoadminMenuStmt,
 		deleteGoadminOperationLogStmt:   q.deleteGoadminOperationLogStmt,
 		deleteGoadminPermissionStmt:     q.deleteGoadminPermissionStmt,
@@ -710,6 +1092,14 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		deleteGoadminSiteStmt:           q.deleteGoadminSiteStmt,
 		deleteGoadminUserStmt:           q.deleteGoadminUserStmt,
 		deleteGoadminUserPermissionStmt: q.deleteGoadminUserPermissionStmt,
+		deleteGroupStmt:                 q.deleteGroupStmt,
+		deleteTodoStmt:                  q.deleteTodoStmt,
+		deleteTodoDetailStmt:            q.deleteTodoDetailStmt,
+		deleteTodoTagStmt:               q.deleteTodoTagStmt,
+		deleteTodosongroupStmt:          q.deleteTodosongroupStmt,
+		getCategoriesStmt:               q.getCategoriesStmt,
+		getCategoriesByIDsStmt:          q.getCategoriesByIDsStmt,
+		getCategoryStmt:                 q.getCategoryStmt,
 		getGoadminMenuStmt:              q.getGoadminMenuStmt,
 		getGoadminMenusStmt:             q.getGoadminMenusStmt,
 		getGoadminOperationLogStmt:      q.getGoadminOperationLogStmt,
@@ -733,6 +1123,21 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		getGoadminUserPermissionStmt:    q.getGoadminUserPermissionStmt,
 		getGoadminUserPermissionsStmt:   q.getGoadminUserPermissionsStmt,
 		getGoadminUsersStmt:             q.getGoadminUsersStmt,
+		getGroupStmt:                    q.getGroupStmt,
+		getGroupsStmt:                   q.getGroupsStmt,
+		getGroupsByIDsStmt:              q.getGroupsByIDsStmt,
+		getTodoStmt:                     q.getTodoStmt,
+		getTodoDetailStmt:               q.getTodoDetailStmt,
+		getTodoDetailsStmt:              q.getTodoDetailsStmt,
+		getTodoDetailsByIDsStmt:         q.getTodoDetailsByIDsStmt,
+		getTodoTagStmt:                  q.getTodoTagStmt,
+		getTodoTagsStmt:                 q.getTodoTagsStmt,
+		getTodoTagsByIDsStmt:            q.getTodoTagsByIDsStmt,
+		getTodosStmt:                    q.getTodosStmt,
+		getTodosByIDsStmt:               q.getTodosByIDsStmt,
+		getTodosongroupStmt:             q.getTodosongroupStmt,
+		getTodosongroupsStmt:            q.getTodosongroupsStmt,
+		updateCategoryStmt:              q.updateCategoryStmt,
 		updateGoadminMenuStmt:           q.updateGoadminMenuStmt,
 		updateGoadminOperationLogStmt:   q.updateGoadminOperationLogStmt,
 		updateGoadminPermissionStmt:     q.updateGoadminPermissionStmt,
@@ -744,5 +1149,10 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		updateGoadminSiteStmt:           q.updateGoadminSiteStmt,
 		updateGoadminUserStmt:           q.updateGoadminUserStmt,
 		updateGoadminUserPermissionStmt: q.updateGoadminUserPermissionStmt,
+		updateGroupStmt:                 q.updateGroupStmt,
+		updateTodoStmt:                  q.updateTodoStmt,
+		updateTodoDetailStmt:            q.updateTodoDetailStmt,
+		updateTodoTagStmt:               q.updateTodoTagStmt,
+		updateTodosongroupStmt:          q.updateTodosongroupStmt,
 	}
 }
