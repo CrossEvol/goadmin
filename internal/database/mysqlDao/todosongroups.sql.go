@@ -55,7 +55,7 @@ func (q *Queries) DeleteTodosongroup(ctx context.Context, arg DeleteTodosongroup
 }
 
 const GetTodosongroup = `-- name: GetTodosongroup :one
-SELECT todo_id, group_id, assignedat
+SELECT todo_id, group_id, assigned_at
 FROM ` + "`" + `todosongroups` + "`" + `
 WHERE todo_id = ?
   AND group_id = ? LIMIT 1
@@ -69,12 +69,12 @@ type GetTodosongroupParams struct {
 func (q *Queries) GetTodosongroup(ctx context.Context, arg GetTodosongroupParams) (Todosongroup, error) {
 	row := q.queryRow(ctx, q.getTodosongroupStmt, GetTodosongroup, arg.TodoID, arg.GroupID)
 	var i Todosongroup
-	err := row.Scan(&i.TodoID, &i.GroupID, &i.Assignedat)
+	err := row.Scan(&i.TodoID, &i.GroupID, &i.AssignedAt)
 	return i, err
 }
 
 const GetTodosongroups = `-- name: GetTodosongroups :many
-SELECT todo_id, group_id, assignedat
+SELECT todo_id, group_id, assigned_at
 FROM ` + "`" + `todosongroups` + "`" + `
 `
 
@@ -87,7 +87,7 @@ func (q *Queries) GetTodosongroups(ctx context.Context) ([]Todosongroup, error) 
 	var items []Todosongroup
 	for rows.Next() {
 		var i Todosongroup
-		if err := rows.Scan(&i.TodoID, &i.GroupID, &i.Assignedat); err != nil {
+		if err := rows.Scan(&i.TodoID, &i.GroupID, &i.AssignedAt); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -110,13 +110,13 @@ SET ` + "`" + `todo_id` + "`" + `  = CASE
                      WHEN ? IS NOT NULL THEN ?
                      ELSE ` + "`" + `group_id` + "`" + `
         END
-WHERE assignedAt = ?
+WHERE assigned_at = ?
 `
 
 type UpdateTodosongroupParams struct {
 	TodoID     int       `db:"todo_id" json:"todo_id"`
 	GroupID    int       `db:"group_id" json:"group_id"`
-	Assignedat time.Time `db:"assignedat" json:"assignedat"`
+	AssignedAt time.Time `db:"assigned_at" json:"assigned_at"`
 }
 
 func (q *Queries) UpdateTodosongroup(ctx context.Context, arg UpdateTodosongroupParams) (sql.Result, error) {
@@ -125,6 +125,6 @@ func (q *Queries) UpdateTodosongroup(ctx context.Context, arg UpdateTodosongroup
 		arg.TodoID,
 		arg.GroupID,
 		arg.GroupID,
-		arg.Assignedat,
+		arg.AssignedAt,
 	)
 }

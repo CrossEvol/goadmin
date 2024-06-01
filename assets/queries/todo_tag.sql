@@ -16,7 +16,7 @@ SELECT count(*) FROM `todo_tag`;
 
 -- name: CreateTodoTag :execresult
 INSERT INTO `todo_tag` (
-`createdAt`,`name`,`todo_id`
+`created_at`,`name`,`todo_id`
 ) VALUES (
 ? ,? ,? 
 );
@@ -24,7 +24,7 @@ INSERT INTO `todo_tag` (
 -- name: UpdateTodoTag :execresult
 UPDATE `todo_tag`
 SET 
-  `createdAt` = CASE WHEN sqlc.arg('createdAt') IS NOT NULL THEN sqlc.arg('createdAt') ELSE `createdAt` END,
+  `created_at` = CASE WHEN sqlc.arg('created_at') IS NOT NULL THEN sqlc.arg('created_at') ELSE `created_at` END,
   
   `name` = CASE WHEN sqlc.arg('name') IS NOT NULL THEN sqlc.arg('name') ELSE `name` END,
   `todo_id` = CASE WHEN sqlc.arg('todo_id') IS NOT NULL THEN sqlc.arg('todo_id') ELSE `todo_id` END

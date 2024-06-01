@@ -25,20 +25,20 @@ func (q *Queries) CountTodoTags(ctx context.Context) (int64, error) {
 
 const CreateTodoTag = `-- name: CreateTodoTag :execresult
 INSERT INTO ` + "`" + `todo_tag` + "`" + ` (
-` + "`" + `createdAt` + "`" + `,` + "`" + `name` + "`" + `,` + "`" + `todo_id` + "`" + `
+` + "`" + `created_at` + "`" + `,` + "`" + `name` + "`" + `,` + "`" + `todo_id` + "`" + `
 ) VALUES (
 ? ,? ,? 
 )
 `
 
 type CreateTodoTagParams struct {
-	Createdat time.Time `db:"createdat" json:"createdat"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
 	Name      string    `db:"name" json:"name"`
 	TodoID    int       `db:"todo_id" json:"todo_id"`
 }
 
 func (q *Queries) CreateTodoTag(ctx context.Context, arg CreateTodoTagParams) (sql.Result, error) {
-	return q.exec(ctx, q.createTodoTagStmt, CreateTodoTag, arg.Createdat, arg.Name, arg.TodoID)
+	return q.exec(ctx, q.createTodoTagStmt, CreateTodoTag, arg.CreatedAt, arg.Name, arg.TodoID)
 }
 
 const DeleteTodoTag = `-- name: DeleteTodoTag :exec
@@ -52,7 +52,7 @@ func (q *Queries) DeleteTodoTag(ctx context.Context, id int) error {
 }
 
 const GetTodoTag = `-- name: GetTodoTag :one
-SELECT id, name, todo_id, createdat FROM ` + "`" + `todo_tag` + "`" + `
+SELECT id, name, todo_id, created_at FROM ` + "`" + `todo_tag` + "`" + `
 WHERE id = ? LIMIT 1
 `
 
@@ -63,13 +63,13 @@ func (q *Queries) GetTodoTag(ctx context.Context, id int) (TodoTag, error) {
 		&i.ID,
 		&i.Name,
 		&i.TodoID,
-		&i.Createdat,
+		&i.CreatedAt,
 	)
 	return i, err
 }
 
 const GetTodoTags = `-- name: GetTodoTags :many
-SELECT id, name, todo_id, createdat FROM ` + "`" + `todo_tag` + "`" + `
+SELECT id, name, todo_id, created_at FROM ` + "`" + `todo_tag` + "`" + `
 `
 
 func (q *Queries) GetTodoTags(ctx context.Context) ([]TodoTag, error) {
@@ -85,7 +85,7 @@ func (q *Queries) GetTodoTags(ctx context.Context) ([]TodoTag, error) {
 			&i.ID,
 			&i.Name,
 			&i.TodoID,
-			&i.Createdat,
+			&i.CreatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -101,7 +101,7 @@ func (q *Queries) GetTodoTags(ctx context.Context) ([]TodoTag, error) {
 }
 
 const GetTodoTagsByIDs = `-- name: GetTodoTagsByIDs :many
-SELECT id, name, todo_id, createdat
+SELECT id, name, todo_id, created_at
 FROM ` + "`" + `todo_tag` + "`" + `
 WHERE id IN (/*SLICE:ids*/?)
 `
@@ -129,7 +129,7 @@ func (q *Queries) GetTodoTagsByIDs(ctx context.Context, ids []int) ([]TodoTag, e
 			&i.ID,
 			&i.Name,
 			&i.TodoID,
-			&i.Createdat,
+			&i.CreatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -147,7 +147,7 @@ func (q *Queries) GetTodoTagsByIDs(ctx context.Context, ids []int) ([]TodoTag, e
 const UpdateTodoTag = `-- name: UpdateTodoTag :execresult
 UPDATE ` + "`" + `todo_tag` + "`" + `
 SET 
-  ` + "`" + `createdAt` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `createdAt` + "`" + ` END,
+  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
   
   ` + "`" + `name` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `name` + "`" + ` END,
   ` + "`" + `todo_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `todo_id` + "`" + ` END
@@ -155,7 +155,7 @@ WHERE id = ?
 `
 
 type UpdateTodoTagParams struct {
-	CreatedAt time.Time `db:"createdAt" json:"createdAt"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
 	Name      string    `db:"name" json:"name"`
 	TodoID    int       `db:"todo_id" json:"todo_id"`
 	ID        int       `db:"id" json:"id"`

@@ -25,7 +25,7 @@ func (q *Queries) CountTodos(ctx context.Context) (int64, error) {
 
 const CreateTodo = `-- name: CreateTodo :execresult
 INSERT INTO ` + "`" + `todo` + "`" + ` (
-` + "`" + `amount` + "`" + `,` + "`" + `category_id` + "`" + `,` + "`" + `content` + "`" + `,` + "`" + `createdAt` + "`" + `,` + "`" + `deadline` + "`" + `,` + "`" + `priority` + "`" + `,` + "`" + `score` + "`" + `,` + "`" + `status` + "`" + `,` + "`" + `title` + "`" + `,` + "`" + `updatedAt` + "`" + `
+` + "`" + `amount` + "`" + `,` + "`" + `category_id` + "`" + `,` + "`" + `content` + "`" + `,` + "`" + `created_at` + "`" + `,` + "`" + `deadline` + "`" + `,` + "`" + `priority` + "`" + `,` + "`" + `score` + "`" + `,` + "`" + `status` + "`" + `,` + "`" + `title` + "`" + `,` + "`" + `updated_at` + "`" + `
 ) VALUES (
 ? ,? ,? ,? ,? ,? ,? ,? ,? ,? 
 )
@@ -35,13 +35,13 @@ type CreateTodoParams struct {
 	Amount     float64       `db:"amount" json:"amount"`
 	CategoryID sql.NullInt32 `db:"category_id" json:"category_id"`
 	Content    string        `db:"content" json:"content"`
-	Createdat  time.Time     `db:"createdat" json:"createdat"`
+	CreatedAt  time.Time     `db:"created_at" json:"created_at"`
 	Deadline   time.Time     `db:"deadline" json:"deadline"`
 	Priority   TodoPriority  `db:"priority" json:"priority"`
 	Score      int           `db:"score" json:"score"`
 	Status     TodoStatus    `db:"status" json:"status"`
 	Title      string        `db:"title" json:"title"`
-	Updatedat  time.Time     `db:"updatedat" json:"updatedat"`
+	UpdatedAt  time.Time     `db:"updated_at" json:"updated_at"`
 }
 
 func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (sql.Result, error) {
@@ -49,13 +49,13 @@ func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (sql.Res
 		arg.Amount,
 		arg.CategoryID,
 		arg.Content,
-		arg.Createdat,
+		arg.CreatedAt,
 		arg.Deadline,
 		arg.Priority,
 		arg.Score,
 		arg.Status,
 		arg.Title,
-		arg.Updatedat,
+		arg.UpdatedAt,
 	)
 }
 
@@ -70,7 +70,7 @@ func (q *Queries) DeleteTodo(ctx context.Context, id int) error {
 }
 
 const GetTodo = `-- name: GetTodo :one
-SELECT id, title, score, amount, status, createdat, updatedat, deadline, priority, content, category_id FROM ` + "`" + `todo` + "`" + `
+SELECT id, title, score, amount, status, created_at, updated_at, deadline, priority, content, category_id FROM ` + "`" + `todo` + "`" + `
 WHERE id = ? LIMIT 1
 `
 
@@ -83,8 +83,8 @@ func (q *Queries) GetTodo(ctx context.Context, id int) (Todo, error) {
 		&i.Score,
 		&i.Amount,
 		&i.Status,
-		&i.Createdat,
-		&i.Updatedat,
+		&i.CreatedAt,
+		&i.UpdatedAt,
 		&i.Deadline,
 		&i.Priority,
 		&i.Content,
@@ -94,7 +94,7 @@ func (q *Queries) GetTodo(ctx context.Context, id int) (Todo, error) {
 }
 
 const GetTodos = `-- name: GetTodos :many
-SELECT id, title, score, amount, status, createdat, updatedat, deadline, priority, content, category_id FROM ` + "`" + `todo` + "`" + `
+SELECT id, title, score, amount, status, created_at, updated_at, deadline, priority, content, category_id FROM ` + "`" + `todo` + "`" + `
 `
 
 func (q *Queries) GetTodos(ctx context.Context) ([]Todo, error) {
@@ -112,8 +112,8 @@ func (q *Queries) GetTodos(ctx context.Context) ([]Todo, error) {
 			&i.Score,
 			&i.Amount,
 			&i.Status,
-			&i.Createdat,
-			&i.Updatedat,
+			&i.CreatedAt,
+			&i.UpdatedAt,
 			&i.Deadline,
 			&i.Priority,
 			&i.Content,
@@ -133,7 +133,7 @@ func (q *Queries) GetTodos(ctx context.Context) ([]Todo, error) {
 }
 
 const GetTodosByIDs = `-- name: GetTodosByIDs :many
-SELECT id, title, score, amount, status, createdat, updatedat, deadline, priority, content, category_id
+SELECT id, title, score, amount, status, created_at, updated_at, deadline, priority, content, category_id
 FROM ` + "`" + `todo` + "`" + `
 WHERE id IN (/*SLICE:ids*/?)
 `
@@ -163,8 +163,8 @@ func (q *Queries) GetTodosByIDs(ctx context.Context, ids []int) ([]Todo, error) 
 			&i.Score,
 			&i.Amount,
 			&i.Status,
-			&i.Createdat,
-			&i.Updatedat,
+			&i.CreatedAt,
+			&i.UpdatedAt,
 			&i.Deadline,
 			&i.Priority,
 			&i.Content,
@@ -189,14 +189,14 @@ SET
   ` + "`" + `amount` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `amount` + "`" + ` END,
   ` + "`" + `category_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `category_id` + "`" + ` END,
   ` + "`" + `content` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `content` + "`" + ` END,
-  ` + "`" + `createdAt` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `createdAt` + "`" + ` END,
+  ` + "`" + `created_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `created_at` + "`" + ` END,
   ` + "`" + `deadline` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `deadline` + "`" + ` END,
   
   ` + "`" + `priority` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `priority` + "`" + ` END,
   ` + "`" + `score` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `score` + "`" + ` END,
   ` + "`" + `status` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `status` + "`" + ` END,
   ` + "`" + `title` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `title` + "`" + ` END,
-  ` + "`" + `updatedAt` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updatedAt` + "`" + ` END
+  ` + "`" + `updated_at` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `updated_at` + "`" + ` END
 WHERE id = ?
 `
 
@@ -204,13 +204,13 @@ type UpdateTodoParams struct {
 	Amount     float64       `db:"amount" json:"amount"`
 	CategoryID sql.NullInt32 `db:"category_id" json:"category_id"`
 	Content    string        `db:"content" json:"content"`
-	CreatedAt  time.Time     `db:"createdAt" json:"createdAt"`
+	CreatedAt  time.Time     `db:"created_at" json:"created_at"`
 	Deadline   time.Time     `db:"deadline" json:"deadline"`
 	Priority   TodoPriority  `db:"priority" json:"priority"`
 	Score      int           `db:"score" json:"score"`
 	Status     TodoStatus    `db:"status" json:"status"`
 	Title      string        `db:"title" json:"title"`
-	UpdatedAt  time.Time     `db:"updatedAt" json:"updatedAt"`
+	UpdatedAt  time.Time     `db:"updated_at" json:"updated_at"`
 	ID         int           `db:"id" json:"id"`
 }
 

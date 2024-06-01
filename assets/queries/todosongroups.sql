@@ -25,7 +25,7 @@ SET `todo_id`  = CASE
                      WHEN sqlc.arg('group_id') IS NOT NULL THEN sqlc.arg('group_id')
                      ELSE `group_id`
         END
-WHERE assignedAt = ?;
+WHERE assigned_at = ?;
 
 -- name: DeleteTodosongroup :exec
 DELETE

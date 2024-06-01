@@ -218,8 +218,8 @@ type Todo struct {
 	Score      int           `db:"score" json:"score"`
 	Amount     float64       `db:"amount" json:"amount"`
 	Status     TodoStatus    `db:"status" json:"status"`
-	Createdat  time.Time     `db:"createdat" json:"createdat"`
-	Updatedat  time.Time     `db:"updatedat" json:"updatedat"`
+	CreatedAt  time.Time     `db:"created_at" json:"created_at"`
+	UpdatedAt  time.Time     `db:"updated_at" json:"updated_at"`
 	Deadline   time.Time     `db:"deadline" json:"deadline"`
 	Priority   TodoPriority  `db:"priority" json:"priority"`
 	Content    string        `db:"content" json:"content"`
@@ -237,11 +237,11 @@ type TodoTag struct {
 	ID        int       `db:"id" json:"id"`
 	Name      string    `db:"name" json:"name"`
 	TodoID    int       `db:"todo_id" json:"todo_id"`
-	Createdat time.Time `db:"createdat" json:"createdat"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
 }
 
 type Todosongroup struct {
 	TodoID     int       `db:"todo_id" json:"todo_id"`
 	GroupID    int       `db:"group_id" json:"group_id"`
-	Assignedat time.Time `db:"assignedat" json:"assignedat"`
+	AssignedAt time.Time `db:"assigned_at" json:"assigned_at"`
 }
