@@ -86,6 +86,28 @@ func (q *Queries) GetGoadminUser(ctx context.Context, id uint32) (GoadminUser, e
 	return i, err
 }
 
+const GetGoadminUserByEmail = `-- name: GetGoadminUserByEmail :one
+SELECT id, username, password, name, avatar, remember_token, email, created_at, updated_at FROM ` + "`" + `goadmin_users` + "`" + `
+WHERE ` + "`" + `email` + "`" + ` = ? LIMIT 1
+`
+
+func (q *Queries) GetGoadminUserByEmail(ctx context.Context, email string) (GoadminUser, error) {
+	row := q.queryRow(ctx, q.getGoadminUserByEmailStmt, GetGoadminUserByEmail, email)
+	var i GoadminUser
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Password,
+		&i.Name,
+		&i.Avatar,
+		&i.RememberToken,
+		&i.Email,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const GetGoadminUsers = `-- name: GetGoadminUsers :many
 SELECT id, username, password, name, avatar, remember_token, email, created_at, updated_at FROM ` + "`" + `goadmin_users` + "`" + `
 `

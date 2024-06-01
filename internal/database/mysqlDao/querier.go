@@ -63,6 +63,7 @@ type Querier interface {
 	GetGoadminSite(ctx context.Context, id uint32) (GoadminSite, error)
 	GetGoadminSites(ctx context.Context) ([]GoadminSite, error)
 	GetGoadminUser(ctx context.Context, id uint32) (GoadminUser, error)
+	GetGoadminUserByEmail(ctx context.Context, email string) (GoadminUser, error)
 	GetGoadminUserPermission(ctx context.Context, createdAt time.Time) (GoadminUserPermission, error)
 	GetGoadminUserPermissions(ctx context.Context) ([]GoadminUserPermission, error)
 	GetGoadminUsers(ctx context.Context) ([]GoadminUser, error)

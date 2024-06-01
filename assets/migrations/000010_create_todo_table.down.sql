@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS `category`;
+DROP TABLE IF EXISTS `group`;
+DROP TABLE IF EXISTS `todo`;
+DROP TABLE IF EXISTS `todo_detail`;
+DROP TABLE IF EXISTS `todo_tag`;
+DROP TABLE IF EXISTS `todosongroups`;

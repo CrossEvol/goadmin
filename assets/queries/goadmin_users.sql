@@ -1,4 +1,8 @@
 
+-- name: GetGoadminUserByEmail :one
+SELECT * FROM `goadmin_users`
+WHERE `email` = ? LIMIT 1;
+
 -- name: GetGoadminUser :one
 SELECT * FROM `goadmin_users`
 WHERE id = ? LIMIT 1;
