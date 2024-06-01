@@ -23,7 +23,7 @@ func (app *application) GetTodo(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w, r)
 		return
 	}
-	response.JSON(w, http.StatusOK, vo.NewTodoVo(&todo))
+	response.JSON(w, http.StatusOK, vo.NewTodoVO(&todo))
 }
 
 func (app *application) GetTodoList(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +39,7 @@ func (app *application) GetTodoList(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
-	response.JSON(w, http.StatusOK, vo.NewTodoVoList(todos))
+	response.JSON(w, http.StatusOK, vo.NewTodoVOs(todos))
 }
 
 func (app *application) GetTodoByIDs(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +60,7 @@ func (app *application) GetTodoByIDs(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
-	response.JSON(w, http.StatusOK, vo.NewTodoVoList(todosByIDs))
+	response.JSON(w, http.StatusOK, vo.NewTodoVOs(todosByIDs))
 }
 
 func (app *application) CreateTodo(w http.ResponseWriter, r *http.Request) {
@@ -86,7 +86,7 @@ func (app *application) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
-	response.JSON(w, http.StatusOK, vo.NewTodoVo(&todo))
+	response.JSON(w, http.StatusOK, vo.NewTodoVO(&todo))
 }
 
 func (app *application) UpdateTodo(w http.ResponseWriter, r *http.Request) {
@@ -114,7 +114,7 @@ func (app *application) UpdateTodo(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
-	response.JSON(w, http.StatusOK, vo.NewTodoVo(&todo))
+	response.JSON(w, http.StatusOK, vo.NewTodoVO(&todo))
 }
 
 func (app *application) DeleteTodo(w http.ResponseWriter, r *http.Request) {
@@ -134,5 +134,5 @@ func (app *application) DeleteTodo(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
-	response.JSON(w, http.StatusOK, vo.NewTodoVo(&todo))
+	response.JSON(w, http.StatusOK, vo.NewTodoVO(&todo))
 }

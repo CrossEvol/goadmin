@@ -4,7 +4,7 @@ import (
 	"github.com/crossevol/goadmin/internal/database/mysqlDao"
 )
 
-type TodoVo struct {
+type TodoVO struct {
 	ID         int                   `json:"id"`
 	Title      string                `json:"title"`
 	Score      int                   `json:"score"`
@@ -18,8 +18,8 @@ type TodoVo struct {
 	CategoryID int32                 `json:"category_id,omitempty"`
 }
 
-func NewTodoVo(todo *mysqlDao.Todo) *TodoVo {
-	return &TodoVo{
+func NewTodoVO(todo *mysqlDao.Todo) *TodoVO {
+	return &TodoVO{
 		ID:         todo.ID,
 		Title:      todo.Title,
 		Score:      todo.Score,
@@ -34,10 +34,10 @@ func NewTodoVo(todo *mysqlDao.Todo) *TodoVo {
 	}
 }
 
-func NewTodoVoList(todoList []mysqlDao.Todo) []*TodoVo {
-	var todoVoList []*TodoVo
+func NewTodoVOs(todoList []mysqlDao.Todo) []*TodoVO {
+	var todoVoList []*TodoVO
 	for _, todo := range todoList {
-		todoVoList = append(todoVoList, NewTodoVo(&todo))
+		todoVoList = append(todoVoList, NewTodoVO(&todo))
 	}
 	return todoVoList
 }

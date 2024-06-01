@@ -23,7 +23,7 @@ type UpdateTodoTagDTO struct {
 	ID     int    `json:"id"`
 }
 
-func NewUpdateTodoTagDTO(dto *UpdateTodoTagDTO) *mysqlDao.UpdateTodoTagParams {
+func NewUpdateTodoTagParams(dto *UpdateTodoTagDTO) *mysqlDao.UpdateTodoTagParams {
 	return &mysqlDao.UpdateTodoTagParams{
 		Name:   dto.Name,
 		TodoID: dto.TodoID,

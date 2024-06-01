@@ -18,7 +18,7 @@ func NewTodoTagVO(todoTag *mysqlDao.TodoTag) *TodoTagVO {
 	}
 }
 
-func NewTodoTagVOList(todoTagList []mysqlDao.TodoTag) []*TodoTagVO {
+func NewTodoTagVOs(todoTagList []mysqlDao.TodoTag) []*TodoTagVO {
 	var todoTagVOList []*TodoTagVO
 	for _, todoTag := range todoTagList {
 		todoTagVOList = append(todoTagVOList, NewTodoTagVO(&todoTag))
