@@ -12,8 +12,7 @@ type CreateTodoTagDTO struct {
 }
 
 func NewCreateTodoTagParams(dto *CreateTodoTagDTO) *mysqlDao.CreateTodoTagParams {
-	params := mysqlDao.CreateTodoTagParams{Name: dto.Name, TodoID: dto.TodoID}
-	params.CreatedAt = time.UnixMilli(dto.CreatedAt)
+	params := mysqlDao.CreateTodoTagParams{Name: dto.Name, TodoID: dto.TodoID, CreatedAt: time.Now()}
 	return &params
 }
 

@@ -28,6 +28,14 @@ func (app *application) routes() http.Handler {
 		r.Delete("/{id}", app.DeleteTodo)
 	})
 
+	mux.Route("/todo-tag", func(r chi.Router) {
+		r.Get("/{id}", app.GetTodoTag)
+		r.Get("/", app.GetTodoTagList)
+		r.Post("/", app.CreateTodoTag)
+		r.Patch("/{id}", app.UpdateTodoTag)
+		r.Delete("/{id}", app.DeleteTodoTag)
+	})
+
 	mux.Group(func(mux chi.Router) {
 		mux.Use(app.requireAuthenticatedUser)
 
