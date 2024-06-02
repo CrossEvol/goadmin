@@ -1,14 +1,13 @@
-DELETE {{url}}/todo-detail/52
+DELETE {{url}}/todo-detail/13
 Accept: application/json
 
 ###
-PATCH {{url}}/todo-detail/11
+PATCH {{url}}/todo-detail/13
 Content-Type: application/json
 
 {
   "desc": "The than one hand throw always sail none late youth.",
-  "img_url": "http://www.forwardsystems.name/solutions/viral",
-  "todo_id": 12
+  "img_url": "http://www.forwardsystems.name/solutions/viral"
 }
 
 ###
@@ -18,7 +17,7 @@ Content-Type: application/json
 {
   "desc": "The than one hand throw always sail none late youth.",
   "img_url": "http://www.forwardsystems.name/solutions/viral",
-  "todo_id": 10
+  "todo_id": 13
 }
 
 

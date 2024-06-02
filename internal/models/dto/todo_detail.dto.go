@@ -19,15 +19,11 @@ func NewCreateTodoDetailParams(dto *CreateTodoDetailDTO) *mysqlDao.CreateTodoDet
 type UpdateTodoDetailDTO struct {
 	Desc   string `json:"desc"`
 	ImgUrl string `json:"img_url"`
-	TodoID int    `json:"todo_id"`
-	ID     int    `json:"id"`
 }
 
 func NewUpdateTodoDetailParams(dto *UpdateTodoDetailDTO) *mysqlDao.UpdateTodoDetailParams {
 	return &mysqlDao.UpdateTodoDetailParams{
 		Desc:   dto.Desc,
 		ImgUrl: dto.ImgUrl,
-		TodoID: dto.TodoID,
-		ID:     dto.ID,
 	}
 }

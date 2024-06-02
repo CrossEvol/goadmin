@@ -66,6 +66,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.countTodoDetailsStmt, err = db.PrepareContext(ctx, CountTodoDetails); err != nil {
 		return nil, fmt.Errorf("error preparing query CountTodoDetails: %w", err)
 	}
+	if q.countTodoDetailsByTodoIDStmt, err = db.PrepareContext(ctx, CountTodoDetailsByTodoID); err != nil {
+		return nil, fmt.Errorf("error preparing query CountTodoDetailsByTodoID: %w", err)
+	}
 	if q.countTodoTagsStmt, err = db.PrepareContext(ctx, CountTodoTags); err != nil {
 		return nil, fmt.Errorf("error preparing query CountTodoTags: %w", err)
 	}
@@ -421,6 +424,11 @@ func (q *Queries) Close() error {
 	if q.countTodoDetailsStmt != nil {
 		if cerr := q.countTodoDetailsStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing countTodoDetailsStmt: %w", cerr)
+		}
+	}
+	if q.countTodoDetailsByTodoIDStmt != nil {
+		if cerr := q.countTodoDetailsByTodoIDStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing countTodoDetailsByTodoIDStmt: %w", cerr)
 		}
 	}
 	if q.countTodoTagsStmt != nil {
@@ -946,6 +954,7 @@ type Queries struct {
 	countGoadminUsersStmt           *sql.Stmt
 	countGroupsStmt                 *sql.Stmt
 	countTodoDetailsStmt            *sql.Stmt
+	countTodoDetailsByTodoIDStmt    *sql.Stmt
 	countTodoTagsStmt               *sql.Stmt
 	countTodosStmt                  *sql.Stmt
 	countTodosongroupsStmt          *sql.Stmt
@@ -1060,6 +1069,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		countGoadminUsersStmt:           q.countGoadminUsersStmt,
 		countGroupsStmt:                 q.countGroupsStmt,
 		countTodoDetailsStmt:            q.countTodoDetailsStmt,
+		countTodoDetailsByTodoIDStmt:    q.countTodoDetailsByTodoIDStmt,
 		countTodoTagsStmt:               q.countTodoTagsStmt,
 		countTodosStmt:                  q.countTodosStmt,
 		countTodosongroupsStmt:          q.countTodosongroupsStmt,

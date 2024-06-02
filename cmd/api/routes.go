@@ -37,11 +37,11 @@ func (app *application) routes() http.Handler {
 	})
 
 	mux.Route("/todo-detail", func(r chi.Router) {
-		r.Get("/{id}", app.GetTodoDetail)
+		r.Get("/{todo_id}", app.GetTodoDetail)
 		r.Get("/", app.GetTodoDetailList)
 		r.Post("/", app.CreateTodoDetail)
-		r.Patch("/{id}", app.UpdateTodoDetail)
-		r.Delete("/{id}", app.DeleteTodoDetail)
+		r.Patch("/{todo_id}", app.UpdateTodoDetail)
+		r.Delete("/{todo_id}", app.DeleteTodoDetail)
 	})
 
 	mux.Group(func(mux chi.Router) {

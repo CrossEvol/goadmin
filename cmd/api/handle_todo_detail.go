@@ -12,13 +12,13 @@ import (
 )
 
 func (app *application) GetTodoDetail(w http.ResponseWriter, r *http.Request) {
-	IdStr := r.PathValue("id")
-	id, err := strconv.ParseInt(IdStr, 10, 32)
+	todoIdStr := r.PathValue("todo_id")
+	todoID, err := strconv.ParseInt(todoIdStr, 10, 32)
 	if err != nil {
 		app.badRequest(w, r, err)
 		return
 	}
-	todoDetail, err := app.q.GetTodoDetail(*app.ctx, int(id))
+	todoDetail, err := app.q.GetTodoDetail(*app.ctx, int(todoID))
 	if err != nil {
 		app.notFound(w, r)
 		return
@@ -28,7 +28,7 @@ func (app *application) GetTodoDetail(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) GetTodoDetailList(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
-	hasIds := query.Has("id")
+	hasIds := query.Has("todo_id")
 	if hasIds {
 		app.GetTodoDetailByIDs(w, r)
 		return
@@ -44,10 +44,10 @@ func (app *application) GetTodoDetailList(w http.ResponseWriter, r *http.Request
 
 func (app *application) GetTodoDetailByIDs(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
-	idsStr := query.Get("id")
-	idsArr := strings.Split(idsStr, ",")
+	todoIdStr := query.Get("todo_id")
+	todoIDsArr := strings.Split(todoIdStr, ",")
 	var ids []int
-	for _, s := range idsArr {
+	for _, s := range todoIDsArr {
 		id, err := strconv.ParseInt(s, 10, 32)
 		if err != nil {
 			app.badRequest(w, r, err)
@@ -90,8 +90,8 @@ func (app *application) CreateTodoDetail(w http.ResponseWriter, r *http.Request)
 }
 
 func (app *application) UpdateTodoDetail(w http.ResponseWriter, r *http.Request) {
-	IdStr := r.PathValue("id")
-	id, err := strconv.ParseInt(IdStr, 10, 32)
+	todoIdStr := r.PathValue("todo_id")
+	todoID, err := strconv.ParseInt(todoIdStr, 10, 32)
 	if err != nil {
 		app.badRequest(w, r, err)
 		return
@@ -103,13 +103,13 @@ func (app *application) UpdateTodoDetail(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	updateTodoDetailParams := dto.NewUpdateTodoDetailParams(&updateTodoDetailDTO)
-	updateTodoDetailParams.ID = int(id)
+	updateTodoDetailParams.TodoID = int(todoID)
 	_, err = app.q.UpdateTodoDetail(*app.ctx, *updateTodoDetailParams)
 	if err != nil {
 		app.serverError(w, r, err)
 		return
 	}
-	todoDetail, err := app.q.GetTodoDetail(*app.ctx, updateTodoDetailParams.ID)
+	todoDetail, err := app.q.GetTodoDetail(*app.ctx, updateTodoDetailParams.TodoID)
 	if err != nil {
 		app.serverError(w, r, err)
 		return
@@ -118,7 +118,7 @@ func (app *application) UpdateTodoDetail(w http.ResponseWriter, r *http.Request)
 }
 
 func (app *application) DeleteTodoDetail(w http.ResponseWriter, r *http.Request) {
-	IdStr := r.PathValue("id")
+	IdStr := r.PathValue("todo_id")
 	id, err := strconv.ParseInt(IdStr, 10, 32)
 	if err != nil {
 		app.badRequest(w, r, err)

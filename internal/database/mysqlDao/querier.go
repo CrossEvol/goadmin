@@ -25,6 +25,7 @@ type Querier interface {
 	CountGoadminUsers(ctx context.Context) (int64, error)
 	CountGroups(ctx context.Context) (int64, error)
 	CountTodoDetails(ctx context.Context) (int64, error)
+	CountTodoDetailsByTodoID(ctx context.Context, todoID int) (int64, error)
 	CountTodoTags(ctx context.Context) (int64, error)
 	CountTodos(ctx context.Context) (int64, error)
 	CountTodosongroups(ctx context.Context) (int64, error)

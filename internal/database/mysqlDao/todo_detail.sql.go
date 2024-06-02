@@ -23,6 +23,19 @@ func (q *Queries) CountTodoDetails(ctx context.Context) (int64, error) {
 	return count, err
 }
 
+const CountTodoDetailsByTodoID = `-- name: CountTodoDetailsByTodoID :one
+SELECT count(*)
+FROM ` + "`" + `todo_detail` + "`" + `
+WHERE todo_id = ?
+`
+
+func (q *Queries) CountTodoDetailsByTodoID(ctx context.Context, todoID int) (int64, error) {
+	row := q.queryRow(ctx, q.countTodoDetailsByTodoIDStmt, CountTodoDetailsByTodoID, todoID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const CreateTodoDetail = `-- name: CreateTodoDetail :execresult
 INSERT INTO ` + "`" + `todo_detail` + "`" + ` (` + "`" + `desc` + "`" + `, ` + "`" + `img_url` + "`" + `, ` + "`" + `todo_id` + "`" + `)
 VALUES (?, ?, ?)
@@ -52,7 +65,8 @@ func (q *Queries) DeleteTodoDetail(ctx context.Context, todoID int) error {
 const GetTodoDetail = `-- name: GetTodoDetail :one
 SELECT id, ` + "`" + `desc` + "`" + `, img_url, todo_id
 FROM ` + "`" + `todo_detail` + "`" + `
-WHERE todo_id = ? LIMIT 1
+WHERE todo_id = ?
+LIMIT 1
 `
 
 func (q *Queries) GetTodoDetail(ctx context.Context, todoID int) (TodoDetail, error) {
@@ -103,7 +117,7 @@ func (q *Queries) GetTodoDetails(ctx context.Context) ([]TodoDetail, error) {
 const GetTodoDetailsByIDs = `-- name: GetTodoDetailsByIDs :many
 SELECT id, ` + "`" + `desc` + "`" + `, img_url, todo_id
 FROM ` + "`" + `todo_detail` + "`" + `
-WHERE id IN (/*SLICE:ids*/?)
+WHERE todo_id IN (/*SLICE:ids*/?)
 `
 
 func (q *Queries) GetTodoDetailsByIDs(ctx context.Context, ids []int) ([]TodoDetail, error) {
@@ -147,17 +161,14 @@ func (q *Queries) GetTodoDetailsByIDs(ctx context.Context, ids []int) ([]TodoDet
 const UpdateTodoDetail = `-- name: UpdateTodoDetail :execresult
 UPDATE ` + "`" + `todo_detail` + "`" + `
 SET ` + "`" + `desc` + "`" + `    = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `desc` + "`" + ` END,
-
-    ` + "`" + `img_url` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `img_url` + "`" + ` END,
-    ` + "`" + `todo_id` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `todo_id` + "`" + ` END
-WHERE id = ?
+    ` + "`" + `img_url` + "`" + ` = CASE WHEN ? IS NOT NULL THEN ? ELSE ` + "`" + `img_url` + "`" + ` END
+WHERE todo_id = ?
 `
 
 type UpdateTodoDetailParams struct {
 	Desc   string `db:"desc" json:"desc"`
 	ImgUrl string `db:"img_url" json:"img_url"`
 	TodoID int    `db:"todo_id" json:"todo_id"`
-	ID     int    `db:"id" json:"id"`
 }
 
 func (q *Queries) UpdateTodoDetail(ctx context.Context, arg UpdateTodoDetailParams) (sql.Result, error) {
@@ -167,7 +178,5 @@ func (q *Queries) UpdateTodoDetail(ctx context.Context, arg UpdateTodoDetailPara
 		arg.ImgUrl,
 		arg.ImgUrl,
 		arg.TodoID,
-		arg.TodoID,
-		arg.ID,
 	)
 }
