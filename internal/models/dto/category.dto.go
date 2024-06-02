@@ -15,7 +15,7 @@ type UpdateCategoryDTO struct {
 	ParentID int32  `db:"parent_id" json:"parent_id"`
 }
 
-func NewCreateCategoryParmas(dto *CreateCategoryDTO) *mysqlDao.CreateCategoryParams {
+func NewCreateCategoryParams(dto *CreateCategoryDTO) *mysqlDao.CreateCategoryParams {
 	params := &mysqlDao.CreateCategoryParams{
 		Name: dto.Name,
 	}
@@ -27,7 +27,7 @@ func NewCreateCategoryParmas(dto *CreateCategoryDTO) *mysqlDao.CreateCategoryPar
 	return params
 }
 
-func NewUpdateCategoryParmas(dto *CreateCategoryDTO) *mysqlDao.UpdateCategoryParams {
+func NewUpdateCategoryParams(dto *UpdateCategoryDTO) *mysqlDao.UpdateCategoryParams {
 	params := &mysqlDao.UpdateCategoryParams{
 		Name: dto.Name,
 	}
