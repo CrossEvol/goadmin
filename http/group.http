@@ -1,0 +1,37 @@
+DELETE {{url}}/group/11
+Accept: application/json
+
+###
+PATCH {{url}}/group/11
+Content-Type: application/json
+
+{
+  "name": "leapp",
+  "desc": "Justice worrisome should am harvest."
+}
+
+###
+POST {{url}}/group
+Content-Type: application/json
+
+{
+  "name": "leapp",
+  "desc": "Justice worrisome should am harvest."
+}
+
+
+###
+GET {{url}}/group?id=1,2,3
+Accept: application/json
+
+###
+
+GET {{url}}/group
+Accept: application/json
+
+###
+
+GET {{url}}/group/1
+Accept: application/json
+
+###

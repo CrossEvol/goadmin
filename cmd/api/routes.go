@@ -52,6 +52,14 @@ func (app *application) routes() http.Handler {
 		r.Delete("/{id}", app.DeleteCategory)
 	})
 
+	mux.Route("/group", func(r chi.Router) {
+		r.Get("/{id}", app.GetGroup)
+		r.Get("/", app.GetGroupList)
+		r.Post("/", app.CreateGroup)
+		r.Patch("/{id}", app.UpdateGroup)
+		r.Delete("/{id}", app.DeleteGroup)
+	})
+
 	mux.Group(func(mux chi.Router) {
 		mux.Use(app.requireAuthenticatedUser)
 
