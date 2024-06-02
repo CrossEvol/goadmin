@@ -3,9 +3,9 @@ package vo
 import "github.com/crossevol/goadmin/internal/database/mysqlDao"
 
 type CategoryVO struct {
-	ID       int    `db:"id" json:"id"`
-	Name     string `db:"name" json:"name"`
-	ParentID int32  `db:"parent_id" json:"parent_id"`
+	ID       int    `json:"id"`
+	Name     string `json:"name"`
+	ParentID int32  `json:"parent_id"`
 }
 
 func NewCategoryVO(category *mysqlDao.Category) *CategoryVO {

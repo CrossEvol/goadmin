@@ -6,13 +6,13 @@ import (
 )
 
 type CreateCategoryDTO struct {
-	Name     string `db:"name" json:"name"`
-	ParentID int32  `db:"parent_id" json:"parent_id"`
+	Name     string `json:"name"`
+	ParentID int32  `json:"parent_id"`
 }
 
 type UpdateCategoryDTO struct {
-	Name     string `db:"name" json:"name"`
-	ParentID int32  `db:"parent_id" json:"parent_id"`
+	Name     string `json:"name"`
+	ParentID int32  `json:"parent_id"`
 }
 
 func NewCreateCategoryParams(dto *CreateCategoryDTO) *mysqlDao.CreateCategoryParams {
