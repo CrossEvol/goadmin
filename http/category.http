@@ -1,0 +1,37 @@
+DELETE {{url}}/category/31
+Accept: application/json
+
+###
+PATCH {{url}}/category/31
+Content-Type: application/json
+
+{
+  "name": "sugar222",
+  "parent_id": 1
+}
+
+###
+POST {{url}}/category
+Content-Type: application/json
+
+{
+  "name": "sugar111",
+  "parent_id": 1
+}
+
+
+###
+GET {{url}}/category?id=1,2,3
+Accept: application/json
+
+###
+
+GET {{url}}/category
+Accept: application/json
+
+###
+
+GET {{url}}/category/1
+Accept: application/json
+
+###
